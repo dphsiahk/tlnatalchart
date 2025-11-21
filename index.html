@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TechLiftAfric Nata Chart App</title>
+  <title>HD Nata Chart App</title>
   <!-- TailwindCSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
   <div class="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8">
-    <h1 class="text-4xl font-bold text-center text-indigo-700 mb-6">TechLiftAfric Nata Chart App</h1>
+    <h1 class="text-4xl font-bold text-center text-indigo-700 mb-6">Nata Chart App</h1>
 
     <!-- Form Section -->
     <form id="nataForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-indigo-50 p-6 rounded-xl shadow-md">
@@ -56,19 +56,114 @@ function reduceToSingleDigit(num) {
 
 function getSunSign(month, day) {
   const signs = [
-    { sign: "Capricorn", start: "12-22", end: "01-19", element: "Earth"},
-    { sign: "Aquarius", start: "01-20", end: "02-18", element: "Air"},
-    { sign: "Pisces", start: "02-19", end: "03-20", element: "Water"},
-    { sign: "Aries", start: "03-21", end: "04-19", element: "Fire"},
-    { sign: "Taurus", start: "04-20", end: "05-20", element: "Earth"},
-    { sign: "Gemini", start: "05-21", end: "06-20", element: "Air"},
-    { sign: "Cancer", start: "06-21", end: "07-22", element: "Water"},
-    { sign: "Leo", start: "07-23", end: "08-22", element: "Fire"},
-    { sign: "Virgo", start: "08-23", end: "09-22", element: "Earth"},
-    { sign: "Libra", start: "09-23", end: "10-22", element: "Air"},
-    { sign: "Scorpio", start: "10-23", end: "11-21", element: "Water"},
-    { sign: "Sagittarius", start: "11-22", end: "12-21", element: "Fire"}
+    { sign: "Capricorn", start: "12-22", end: "01-19", element: "Earth",
+      traits: "Disciplined, responsible, ambitious, patient, grounded.",
+      meaning: "Capricorn represents mastery, wisdom, and long-term success.",
+      power: "Structured planning, leadership, perseverance.",
+      strength: "Self-control, professionalism, resilience.",
+      spirituality: "Grounding rituals, ancestral respect, disciplined meditation.",
+      wealth: "Investment, long-term projects, business leadership." },
+
+    { sign: "Aquarius", start: "01-20", end: "02-18", element: "Air",
+      traits: "Innovative, analytical, free-spirited, visionary.",
+      meaning: "Aquarius symbolizes genius, innovation, and collective elevation.",
+      power: "Creativity, invention, networking.",
+      strength: "Uniqueness, intelligence, independence.",
+      spirituality: "Breathwork, open-minded meditation, cosmic awareness.",
+      wealth: "Technology, innovation, social influence." },
+
+    { sign: "Pisces", start: "02-19", end: "03-20", element: "Water",
+      traits: "Empathetic, intuitive, artistic, compassionate.",
+      meaning: "Pisces is the realm of intuition, spiritual depth, and emotional intelligence.",
+      power: "Creativity, healing, intuition.",
+      strength: "Compassion, imagination, emotional understanding.",
+      spirituality: "Water rituals, meditation, dream interpretation.",
+      wealth: "Art, healing services, spiritual careers." },
+
+    { sign: "Aries", start: "03-21", end: "04-19", element: "Fire",
+      traits: "Bold, courageous, assertive, energetic.",
+      meaning: "Aries is the warrior, pioneer, and unstoppable force.",
+      power: "Initiative, leadership, courage.",
+      strength: "Fearlessness, determination, charisma.",
+      spirituality: "Fire rituals, physical training, motivation meditation.",
+      wealth: "Entrepreneurship, leadership roles." },
+
+    { sign: "Taurus", start: "04-20", end: "05-20", element: "Earth",
+      traits: "Patient, dependable, sensual, loyal.",
+      meaning: "Taurus represents stability, beauty, and material comfort.",
+      power: "Consistency, patience, manifestation.",
+      strength: "Endurance, practicality.",
+      spirituality: "Nature grounding, sensory rituals.",
+      wealth: "Real estate, finance, agriculture." },
+
+    { sign: "Gemini", start: "05-21", end: "06-20", element: "Air",
+      traits: "Intelligent, witty, adaptable, expressive.",
+      meaning: "Gemini is the communicator, thinker, and connector.",
+      power: "Communication, adaptability.",
+      strength: "Fast learning, social intelligence.",
+      spirituality: "Breathwork, journaling.",
+      wealth: "Media, writing, sales, teaching." },
+
+    { sign: "Cancer", start: "06-21", end: "07-22", element: "Water",
+      traits: "Nurturing, protective, emotional, intuitive.",
+      meaning: "Cancer embodies home, ancestry, and emotion.",
+      power: "Emotional intelligence, intuition.",
+      strength: "Loyalty, nurturing, determination.",
+      spirituality: "Moon rituals, ancestor connection.",
+      wealth: "Hospitality, healing, real estate." },
+
+    { sign: "Leo", start: "07-23", end: "08-22", element: "Fire",
+      traits: "Confident, charismatic, generous, creative.",
+      meaning: "Leo radiates leadership, expression, and royalty.",
+      power: "Influence, creativity.",
+      strength: "Courage, loyalty, presence.",
+      spirituality: "Sun meditation, affirmations.",
+      wealth: "Entertainment, leadership, public careers." },
+
+    { sign: "Virgo", start: "08-23", end: "09-22", element: "Earth",
+      traits: "Analytical, practical, humble, detail-oriented.",
+      meaning: "Virgo is the healer, organizer, and perfectionist.",
+      power: "Precision, discipline.",
+      strength: "Problem-solving, intellect.",
+      spirituality: "Herbal healing, mindfulness.",
+      wealth: "Health, analytics, writing." },
+
+    { sign: "Libra", start: "09-23", end: "10-22", element: "Air",
+      traits: "Diplomatic, charming, balanced, artistic.",
+      meaning: "Libra brings harmony, justice, and beauty.",
+      power: "Diplomacy, charm.",
+      strength: "Creativity, fairness.",
+      spirituality: "Balance rituals, love meditation.",
+      wealth: "Law, arts, partnerships." },
+
+    { sign: "Scorpio", start: "10-23", end: "11-21", element: "Water",
+      traits: "Intense, powerful, loyal, transformative.",
+      meaning: "Scorpio rules rebirth, truth, and deep power.",
+      power: "Transformation, influence.",
+      strength: "Resilience, loyalty, intuition.",
+      spirituality: "Shadow work, deep meditation.",
+      wealth: "Investigation, psychology, strategy." },
+
+    { sign: "Sagittarius", start: "11-22", end: "12-21", element: "Fire",
+      traits: "Adventurous, optimistic, wise, energetic.",
+      meaning: "Sagittarius represents freedom, knowledge, and expansion.",
+      power: "Wisdom, exploration.",
+      strength: "Optimism, courage.",
+      spirituality: "Nature connection, philosophical meditation.",
+      wealth: "Travel, education, leadership." }
   ];
+
+  const birth = parseInt(`${month.toString().padStart(2,'0')}${day.toString().padStart(2,'0')}`);
+
+  for (const s of signs) {
+    const start = parseInt(s.start.replace('-', ''));
+    const end = parseInt(s.end.replace('-', ''));
+
+    if ((birth >= start && birth <= end) || (start > end && (birth >= start || birth <= end))) {
+      return s;
+    }
+  }
+}  ];
 
   const birth = parseInt(`${month.toString().padStart(2,'0')}${day.toString().padStart(2,'0')}`);
 
