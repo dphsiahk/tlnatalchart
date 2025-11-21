@@ -1,139 +1,464 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HD Natal Chart App</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HD Natal Chart — Advanced Numerology & User Management</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-full bg-gray-100 text-gray-900">
-  <div class="max-w-5xl mx-auto p-6">
-    <header class="text-center mb-10">
-      <h1 class="text-4xl font-bold mb-2">HD Natal Chart & Numerology App</h1>
-      <p class="text-lg text-gray-600">African + Liberian Traditional Insight Edition</p>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 to-indigo-900 text-slate-100">
+  <div class="max-w-6xl mx-auto p-6">
+    <header class="mb-6 flex items-center justify-between">
+      <div>
+        <h1 class="text-3xl font-extrabold">HD Natal Chart — Advanced Numerology</h1>
+        <p class="text-sm opacity-80">Full HTML + Tailwind • Local-first user management • Liberian/African cultural guidance</p>
+      </div>
+      <div class="space-x-2">
+        <button id="openLogin" class="bg-amber-400 text-slate-900 px-4 py-2 rounded-md font-semibold">Login / Profile</button>
+        <button id="openAdmin" class="bg-transparent border border-white/10 px-4 py-2 rounded-md">Admin</button>
+      </div>
     </header>
 
-    <section class="bg-white p-6 rounded-2xl shadow-lg mb-10">
-      <h2 class="text-2xl font-semibold mb-4">Enter Your Natal Information</h2>
-      <form id="natalForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" id="name" placeholder="Full Name" class="p-3 border rounded-lg w-full" required />
-        <input type="number" id="month" placeholder="Birth Month (1-12)" class="p-3 border rounded-lg w-full" required />
-        <input type="number" id="day" placeholder="Birth Day (1-31)" class="p-3 border rounded-lg w-full" required />
-        <input type="number" id="year" placeholder="Birth Year" class="p-3 border rounded-lg w-full" required />
+    <!-- Main grid -->
+    <main class="grid grid-cols-12 gap-6">
 
-        <button type="submit" class="md:col-span-2 mt-4 bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700">Generate Natal Chart</button>
-      </form>
-    </section>
+      <!-- Form column -->
+      <section class="col-span-12 lg:col-span-4 bg-white/5 p-6 rounded-xl shadow-inner">
+        <h2 class="text-xl font-semibold mb-4">Enter Natal Data</h2>
+        <form id="natalForm" class="space-y-3">
+          <input id="name" placeholder="Full name (for Expression number)" class="w-full p-3 rounded-md bg-white/10" required />
 
-    <section id="results" class="hidden bg-white p-6 rounded-2xl shadow-lg">
-      <h2 class="text-3xl font-bold mb-4">Your Natal Chart Results</h2>
-      <div id="zodiacResult" class="mb-6"></div>
-      <div id="numerologyResult" class="mb-6"></div>
-      <div id="africanResult" class="mb-6"></div>
-    </section>
+          <div class="grid grid-cols-3 gap-2">
+            <input id="month" type="number" min="1" max="12" placeholder="Month" class="p-2 rounded-md bg-white/10" required />
+            <input id="day" type="number" min="1" max="31" placeholder="Day" class="p-2 rounded-md bg-white/10" required />
+            <input id="year" type="number" min="1900" max="2099" placeholder="Year" class="p-2 rounded-md bg-white/10" required />
+          </div>
+
+          <input id="time" placeholder="Time (optional) e.g. 14:30" class="w-full p-2 rounded-md bg-white/10" />
+          <input id="place" placeholder="Place (City, Country)" class="w-full p-2 rounded-md bg-white/10" />
+
+          <label class="block text-sm">Cultural lens</label>
+          <select id="culture" class="w-full p-2 rounded-md bg-white/10">
+            <option>Global</option>
+            <option>Liberia</option>
+            <option>West African</option>
+            <option>Other African</option>
+          </select>
+
+          <div class="flex gap-2">
+            <button type="submit" class="flex-1 py-2 rounded-lg bg-amber-500 text-slate-900 font-semibold">Generate Readout</button>
+            <button id="resetBtn" type="button" class="py-2 px-4 rounded-lg border">Reset</button>
+          </div>
+
+          <p class="text-xs opacity-70">This tool calculates: Sun Sign, Life Path, Expression number (name-based), Soul Urge, Personality, advanced spiritual analytics, and stores results in your profile if logged in.</p>
+        </form>
+
+        <hr class="my-4 border-white/10" />
+        <div>
+          <h3 class="font-semibold">Quick Numerology Help</h3>
+          <p class="text-sm opacity-75 mt-2">Expression number = name -> maps letters to 1-9. Life Path = full birthdate. Soul Urge = vowels total. Personality = consonants total.</p>
+        </div>
+      </section>
+
+      <!-- Results + chart column -->
+      <section class="col-span-12 lg:col-span-8 space-y-4">
+
+        <div id="visualCard" class="bg-white/3 p-6 rounded-xl">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 id="resName" class="text-2xl font-bold">Your Readout</h2>
+              <p id="resMeta" class="text-sm opacity-80">Complete the form to generate a detailed natal & numerology profile.</p>
+            </div>
+            <div class="text-right">
+              <p class="font-semibold">Sun Sign: <span id="resSign">—</span></p>
+              <p class="font-semibold">Life Path: <span id="resLife">—</span></p>
+              <p class="font-semibold">Expression: <span id="resExpr">—</span></p>
+            </div>
+          </div>
+
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 bg-white/5 rounded-md">
+              <h4 class="font-semibold">Core Profile</h4>
+              <div id="coreProfile" class="mt-2 text-sm opacity-85">—</div>
+            </div>
+            <div class="p-4 bg-white/5 rounded-md">
+              <h4 class="font-semibold">Power & Strength</h4>
+              <div id="powerProfile" class="mt-2 text-sm opacity-85">—</div>
+            </div>
+            <div class="p-4 bg-white/5 rounded-md">
+              <h4 class="font-semibold">Spiritual Analytics</h4>
+              <div id="spiritProfile" class="mt-2 text-sm opacity-85">—</div>
+            </div>
+          </div>
+
+          <div class="mt-6 p-4 bg-gradient-to-r from-amber-800/10 to-indigo-800/5 rounded-md">
+            <h4 class="font-semibold">Advanced Motivations & Journey Map</h4>
+            <div id="journeyMap" class="mt-2 text-sm opacity-85">—</div>
+          </div>
+
+          <div class="mt-4 flex gap-2">
+            <button id="saveProfile" class="py-2 px-4 rounded-lg bg-slate-700">Save to Profile</button>
+            <button id="exportJSON" class="py-2 px-4 rounded-lg border">Export JSON</button>
+            <button id="printBtn" class="py-2 px-4 rounded-lg border">Print</button>
+            <button id="reqSupport" class="ml-auto py-2 px-4 rounded-lg bg-emerald-500 text-slate-900">Request 1‑on‑1 Spiritual Support</button>
+          </div>
+
+        </div>
+
+        <!-- Activity history -->
+        <div id="activityCard" class="bg-white/6 p-6 rounded-xl">
+          <div class="flex items-center justify-between">
+            <h3 class="font-semibold">Activity History</h3>
+            <div class="text-sm opacity-80">Logged-in user activities are saved locally</div>
+          </div>
+          <ul id="activityList" class="mt-4 space-y-2 text-sm"></ul>
+
+          <div class="mt-4">
+            <button id="clearHistory" class="py-2 px-4 rounded-md border">Clear History</button>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer class="mt-6 text-center text-xs opacity-70">Made with Tailwind • Local-first • No external APIs • Admin data stored locally</footer>
   </div>
 
-<script>
-// Zodiac signs
-function getZodiac(month, day) {
-  const zodiac = [
-    { sign: "Capricorn", start: [12, 22], end: [1, 19] },
-    { sign: "Aquarius", start: [1, 20], end: [2, 18] },
-    { sign: "Pisces", start: [2, 19], end: [3, 20] },
-    { sign: "Aries", start: [3, 21], end: [4, 19] },
-    { sign: "Taurus", start: [4, 20], end: [5, 20] },
-    { sign: "Gemini", start: [5, 21], end: [6, 20] },
-    { sign: "Cancer", start: [6, 21], end: [7, 22] },
-    { sign: "Leo", start: [7, 23], end: [8, 22] },
-    { sign: "Virgo", start: [8, 23], end: [9, 22] },
-    { sign: "Libra", start: [9, 23], end: [10, 22] },
-    { sign: "Scorpio", start: [10, 23], end: [11, 21] },
-    { sign: "Sagittarius", start: [11, 22], end: [12, 21] },
-  ];
+  <!-- Login / Profile Modal -->
+  <div id="loginModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+    <div class="bg-slate-900 p-6 rounded-xl w-96">
+      <h3 class="text-lg font-semibold mb-3">User Profile / Login</h3>
+      <div id="profileArea">
+        <div id="anonForm">
+          <input id="uEmail" placeholder="Email" class="w-full p-2 rounded-md bg-white/5 mb-2" />
+          <input id="uPass" placeholder="Password" type="password" class="w-full p-2 rounded-md bg-white/5 mb-2" />
+          <div class="flex gap-2">
+            <button id="loginBtn" class="flex-1 py-2 rounded-md bg-amber-500 text-slate-900">Login</button>
+            <button id="registerBtn" class="py-2 px-4 rounded-md border">Register</button>
+          </div>
+        </div>
+        <div id="profileView" class="hidden">
+          <p id="profileEmail" class="mb-2"></p>
+          <button id="logoutBtn" class="py-2 px-4 rounded-md border">Logout</button>
+        </div>
+      </div>
+      <div class="mt-3 text-sm opacity-70">Profiles stored locally (for demo). Admin dashboard will show support requests.</div>
+      <div class="mt-4 text-right"><button id="closeLogin" class="py-1 px-3 rounded-md border">Close</button></div>
+    </div>
+  </div>
 
-  for (const z of zodiac) {
-    if (
-      (month === z.start[0] && day >= z.start[1]) ||
-      (month === z.end[0] && day <= z.end[1])
-    ) return z.sign;
+  <!-- Admin Modal -->
+  <div id="adminModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+    <div class="bg-slate-900 p-6 rounded-xl w-11/12 max-w-3xl">
+      <h3 class="text-lg font-semibold mb-3">Admin Dashboard</h3>
+      <div id="adminLoginArea">
+        <input id="adminPass" placeholder="Admin password" type="password" class="w-full p-2 rounded-md bg-white/5 mb-2" />
+        <div class="flex gap-2">
+          <button id="adminLoginBtn" class="flex-1 py-2 rounded-md bg-amber-500 text-slate-900">Enter Admin</button>
+          <button id="closeAdmin" class="py-2 px-4 rounded-md border">Close</button>
+        </div>
+      </div>
+
+      <div id="adminArea" class="hidden">
+        <h4 class="font-semibold">One‑on‑One Support Requests</h4>
+        <ul id="requestsList" class="mt-3 space-y-2 text-sm max-h-64 overflow-auto"></ul>
+        <h4 class="font-semibold mt-4">Saved Profiles</h4>
+        <ul id="savedProfiles" class="mt-3 space-y-2 text-sm max-h-64 overflow-auto"></ul>
+        <div class="mt-4 text-right"><button id="adminLogoutBtn" class="py-2 px-4 rounded-md border">Logout Admin</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Support Request Modal -->
+  <div id="supportModal" class="fixed inset-0 bg-black/60 hidden items-center justify-center">
+    <div class="bg-slate-900 p-6 rounded-xl w-96">
+      <h3 class="text-lg font-semibold mb-3">Request One‑on‑One Spiritual Support</h3>
+      <form id="supportForm" class="space-y-2">
+        <input id="sName" placeholder="Your name" class="w-full p-2 rounded-md bg-white/5" required />
+        <input id="sEmail" placeholder="Your email" class="w-full p-2 rounded-md bg-white/5" required />
+        <textarea id="sMsg" placeholder="A short description of what you need" class="w-full p-2 rounded-md bg-white/5" rows="4"></textarea>
+        <div class="flex gap-2">
+          <button type="submit" class="flex-1 py-2 rounded-md bg-emerald-500 text-slate-900">Send Request</button>
+          <button id="closeSupport" type="button" class="py-2 px-4 rounded-md border">Cancel</button>
+        </div>
+        <p class="text-xs opacity-70">Your request will be saved to the admin dashboard and a mailto: draft can be opened to send an email to the spiritual support team.</p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  // ---------- Utilities ----------
+  function monthDayToSign(m,d){
+    const signs = [
+      {name:'Capricorn', start:[12,22], end:[1,19]},
+      {name:'Aquarius', start:[1,20], end:[2,18]},
+      {name:'Pisces', start:[2,19], end:[3,20]},
+      {name:'Aries', start:[3,21], end:[4,19]},
+      {name:'Taurus', start:[4,20], end:[5,20]},
+      {name:'Gemini', start:[5,21], end:[6,20]},
+      {name:'Cancer', start:[6,21], end:[7,22]},
+      {name:'Leo', start:[7,23], end:[8,22]},
+      {name:'Virgo', start:[8,23], end:[9,22]},
+      {name:'Libra', start:[9,23], end:[10,22]},
+      {name:'Scorpio', start:[10,23], end:[11,21]},
+      {name:'Sagittarius', start:[11,22], end:[12,21]}
+    ];
+    for(const s of signs){
+      const [sM,sD]=s.start; const [eM,eD]=s.end;
+      if((m===sM && d>=sD) || (m===eM && d<=eD)) return s.name;
+      // wrap
+      if(sM>eM){ if((m===sM && d>=sD) || (m===eM && d<=eD) || m> sM || m< eM) return s.name; }
+    }
+    return 'Unknown';
   }
-  return "Unknown";
-}
 
-// Numerology life path calculation
-function getLifePath(year, month, day) {
-  const sumDigits = (num) => num.toString().split('').reduce((a,b)=>a+parseInt(b),0);
-  let total = sumDigits(year) + sumDigits(month) + sumDigits(day);
-  while (total > 9) total = sumDigits(total);
-  return total;
-}
-
-// African & Liberian spiritual interpretation
-function africanInsight(zodiac) {
-  const insights = {
-    "Capricorn": "Capricorn in African tradition symbolizes the Mountain Goat — one who climbs without fear. In Liberian wisdom, this represents a person who gains power through patience and endurance.",
-    "Aquarius": "Aquarius reflects the Water Carrier — a bringer of knowledge. In Liberian tradition, they carry 'wisdom water' for community upliftment.",
-    "Leo": "Leo aligns with the Lion — symbol of royal destiny and leadership in many West African lineages.",
-    // Expand others similarly
+  // Numerology: Pythagorean mapping 1-9
+  const letterMap = {
+    A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,
+    J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,
+    S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8
   };
-  return insights[zodiac] || "Your African ancestral insight will guide you through strength, community, and destiny.";
-}
 
-// Detailed zodiac meanings
-const zodiacDetails = {
-  "Capricorn": {
-    traits: "Disciplined, strategic, ambitious, structured, resilient.",
-    meaning: "Capricorn represents mastery, structure, and long‑term success. You are a builder of legacy.",
-    power: "Strategic planning, discipline, leadership in resources.",
-    spiritual: "Mountain meditations, quiet reflection, honoring ancestors for strength.",
-  },
-  "Aquarius": {
-    traits: "Innovative, humanitarian, unique, intelligent, free‑minded.",
-    meaning: "Aquarius brings future‑thinking and transformation.",
-    power: "Creativity, community influence, technology mastery.",
-    spiritual: "Water rituals, cleansing, alignment with higher intuition.",
+  function reduceNumber(n){
+    // keep master numbers 11,22,33
+    while(n>9 && n!==11 && n!==22 && n!==33){
+      n = String(n).split('').reduce((a,b)=>a+Number(b),0);
+    }
+    return n;
   }
-  // Add all zodiac signs...
-};
 
-// GENERATE RESULTS
-const form = document.getElementById("natalForm");
-form.addEventListener("submit", function(e) {
-  e.preventDefault();
+  function calcNameNumbers(fullName){
+    const letters = fullName.toUpperCase().replace(/[^A-Z]/g,'');
+    let total=0; let vowels=0; let consonants=0;
+    const vs = new Set(['A','E','I','O','U']);
+    for(const ch of letters){
+      const val = letterMap[ch] || 0; total += val;
+      if(vs.has(ch)) vowels += val; else consonants += val;
+    }
+    return {
+      expression: reduceNumber(total),
+      soulUrge: reduceNumber(vowels),
+      personality: reduceNumber(consonants)
+    };
+  }
 
-  const name = document.getElementById("name").value;
-  const month = parseInt(document.getElementById("month").value);
-  const day = parseInt(document.getElementById("day").value);
-  const year = parseInt(document.getElementById("year").value);
+  function lifePath(year,month,day){
+    const sum = (n)=>String(n).split('').reduce((a,b)=>a+Number(b),0);
+    let total = sum(year)+sum(month)+sum(day);
+    return reduceNumber(total);
+  }
 
-  const zodiac = getZodiac(month, day);
-  const lifePath = getLifePath(year, month, day);
-  const african = africanInsight(zodiac);
+  // Definitions for numbers
+  const numberDefs = {
+    1: 'Leader. Independent, initiator, entrepreneurial. Life focus: autonomy, visibility, creating new paths.',
+    2: 'Diplomat. Partnership-oriented, cooperative, peacemaker. Life focus: relationships, mediation, shared ventures.',
+    3: 'Creative. Expressive, communicative, joy-bringing. Life focus: art, teaching, storytelling.',
+    4: 'Builder. Practical, disciplined, systems-focused. Life focus: craft, structure, stable income.',
+    5: 'Adventurer. Freedom-seeking, adaptable, marketer. Life focus: travel, trade, flexible income.',
+    6: 'Caretaker. Responsible, harmonious, community-oriented. Life focus: service, family, local businesses.',
+    7: 'Seeker. Introspective, research-oriented, spiritual. Life focus: study, consultancy, inner work.',
+    8: 'Abundance. Power, authority, material success. Life focus: scalable business, wealth stewardship.',
+    9: 'Humanitarian. Compassionate, wide-reaching, artistic. Life focus: philanthropy, culture, healing.',
+    11: 'Master visionary. Intuitive leadership, inspiration, strong psychic potential. Life focus: guiding others, spiritual entrepreneurship.',
+    22: 'Master builder. World-class organizer, institution builder. Life focus: legacy projects and systems that scale.',
+    33: 'Master teacher. Sacrificial service, large-scale teaching and healing. Life focus: cultural transformation and education.'
+  };
 
-  // Render zodiac block
-  const zd = zodiacDetails[zodiac] || {};
-  document.getElementById("zodiacResult").innerHTML = `
-    <h3 class="text-2xl font-bold mb-2">Zodiac Sign: ${zodiac}</h3>
-    <p><strong>Traits:</strong> ${zd.traits || "N/A"}</p>
-    <p><strong>Meaning:</strong> ${zd.meaning || "N/A"}</p>
-    <p><strong>Power & Strength Areas:</strong> ${zd.power || "N/A"}</p>
-    <p><strong>Spiritual Wealth Focus:</strong> ${zd.spiritual || "N/A"}</p>
-  `;
+  // Zodiac details (concise, can be expanded)
+  const zodiacDetails = {
+    'Capricorn':{
+      attributes:'Disciplined, strategic, ambitious, patient.',
+      power:'Governance, long-term finance, infrastructure, mentorship.',
+      spiritual:'Ancestor contracts, work-ethic blessings, elder mentorship.'
+    },
+    'Aquarius':{attributes:'Innovative, group-minded, humanitarian.', power:'Tech, social enterprises, cooperative models.', spiritual:'Vision circles, community rites.'},
+    'Pisces':{attributes:'Compassionate, artistic, intuitive.', power:'Healing arts, spiritual guidance.', spiritual:'Dream work, water rituals.'},
+    'Aries':{attributes:'Bold, initiating, direct.', power:'Leadership, physical discipline.', spiritual:'Warrior rites, breathwork.'},
+    'Taurus':{attributes:'Steady, value-focused, sensual.', power:'Property, craft, agriculture.', spiritual:'Stewardship rituals, savings circles.'},
+    'Gemini':{attributes:'Curious, communicative.', power:'Media, trade, education.', spiritual:'Storytelling, oral tradition.'},
+    'Cancer':{attributes:'Nurturing, protective.', power:'Care economies, healing.', spiritual:'Ancestor offerings, moon-time rituals.'},
+    'Leo':{attributes:'Charismatic, generous.', power:'Public roles, performance.', spiritual:'Festival offerings, patronage.'},
+    'Virgo':{attributes:'Analytical, service-focused.', power:'Healthcare, logistics.', spiritual:'Herbal knowledge, practical rites.'},
+    'Libra':{attributes:'Diplomatic, partnership-focused.', power:'Law, design, mediation.', spiritual:'Council rituals, fairness rites.'},
+    'Scorpio':{attributes:'Intense, transformative.', power:'Research, finance, therapy.', spiritual:'Initiation, cleansing rites.'},
+    'Sagittarius':{attributes:'Explorer, philosophical.', power:'Trade, education, diaspora networks.', spiritual:'Pilgrimage, ethical expansion.'}
+  };
 
-  // Numerology
-  document.getElementById("numerologyResult").innerHTML = `
-    <h3 class="text-2xl font-bold mb-2">Life Path Number: ${lifePath}</h3>
-    <p>This number reveals your destiny, personality, and spiritual alignment based on advanced numerology.</p>
-  `;
+  // ---------- App State & Storage ----------
+  function readStore(){ return JSON.parse(localStorage.getItem('natal_store')||'{}'); }
+  function writeStore(s){ localStorage.setItem('natal_store', JSON.stringify(s)); }
 
-  // African insight
-  document.getElementById("africanResult").innerHTML = `
-    <h3 class="text-2xl font-bold mb-2">African & Liberian Traditional Insight</h3>
-    <p>${african}</p>
-  `;
+  function currentUser(){ return JSON.parse(localStorage.getItem('natal_user')||'null'); }
 
-  document.getElementById("results").classList.remove("hidden");
-});
-</script>
+  // ---------- Display helpers ----------
+  function setText(id, html){ document.getElementById(id).innerHTML = html; }
+
+  // ---------- Form handling ----------
+  document.getElementById('natalForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const name = document.getElementById('name').value.trim();
+    const month = Number(document.getElementById('month').value);
+    const day = Number(document.getElementById('day').value);
+    const year = document.getElementById('year').value.trim();
+    const time = document.getElementById('time').value.trim();
+    const place = document.getElementById('place').value.trim();
+    const culture = document.getElementById('culture').value;
+
+    if(!name||!month||!day||!year) return alert('Please complete required fields');
+
+    const sign = monthDayToSign(month,day);
+    const lp = lifePath(year,month,day);
+    const nameNums = calcNameNumbers(name);
+
+    // Build spiritual analytics
+    const z = zodiacDetails[sign] || {};
+    const spiritual = `${z.spiritual || ''} Focus rituals: ${culture==='Liberia'?'Elder blessings, rotating savings (susu), market guild relations.': 'Ancestral respect, community savings, mentorship.'}`;
+
+    const journey = `Primary motivation: ${numberDefs[lp]||'Blend of energies.'} Expression (how you present): ${numberDefs[nameNums.expression]||''} Soul Urge (inner longing): ${numberDefs[nameNums.soulUrge]||''}`;
+
+    // Result object
+    const result = {
+      name, birthdate:`${year}-${String(month).padStart(2,'0')}-${String(day).padStart(2,'0')}`, time, place, culture, sign, lifePath:lp, expression:nameNums.expression, soulUrge:nameNums.soulUrge, personality:nameNums.personality, generatedAt:new Date().toISOString(), spiritual, journey
+    };
+
+    // Display
+    setText('resName', name);
+    setText('resMeta', `${result.birthdate} ${time? '• '+time:''} ${place? '• '+place:''}`);
+    document.getElementById('resSign').textContent = sign;
+    document.getElementById('resLife').textContent = lp;
+    document.getElementById('resExpr').textContent = nameNums.expression;
+
+    setText('coreProfile', `<strong>Sign:</strong> ${sign} — ${z.attributes||''}<br/><strong>Expression:</strong> ${nameNums.expression} (${numberDefs[nameNums.expression]||''})<br/><strong>Soul Urge:</strong> ${nameNums.soulUrge} (${numberDefs[nameNums.soulUrge]||''})`);
+
+    setText('powerProfile', `<strong>Power Areas:</strong> ${z.power||''}<br/><strong>Practical steps:</strong><ul class="ml-4 list-disc"><li>Set 90‑day milestones.</li><li>Join or form rotating savings groups.</li><li>Formalize agreements with written + oral traditions respected.</li></ul>`);
+
+    setText('spiritProfile', `<strong>Spiritual Guidance:</strong> ${spiritual}`);
+    setText('journeyMap', journey);
+
+    // Save activity to user profile or anon history
+    const user = currentUser();
+    const store = readStore();
+    if(user){
+      store.users = store.users||{};
+      store.users[user.email] = store.users[user.email]||{profiles:[], activities:[]};
+      store.users[user.email].activities.unshift({type:'generate', result});
+      store.users[user.email].latestProfile = result;
+      writeStore(store);
+      renderActivities();
+    } else {
+      // save generic activity list
+      store.activities = store.activities||[];
+      store.activities.unshift({type:'generate', result});
+      writeStore(store);
+      renderActivities();
+    }
+
+    // Save last generated to localStorage for export/print
+    localStorage.setItem('natal_last_result', JSON.stringify(result));
+  });
+
+  // Reset
+  document.getElementById('resetBtn').addEventListener('click', ()=>{ document.getElementById('natalForm').reset(); });
+
+  // Export
+  document.getElementById('exportJSON').addEventListener('click', ()=>{
+    const res = localStorage.getItem('natal_last_result');
+    if(!res) return alert('No result found to export.');
+    const blob = new Blob([res], {type:'application/json'});
+    const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href=url; a.download='natal_result.json'; a.click(); URL.revokeObjectURL(url);
+  });
+
+  document.getElementById('printBtn').addEventListener('click', ()=>window.print());
+
+  // ---------- User Management (local) ----------
+  document.getElementById('openLogin').addEventListener('click', ()=>{ document.getElementById('loginModal').classList.remove('hidden'); document.getElementById('loginModal').classList.add('flex'); updateProfileView(); });
+  document.getElementById('closeLogin').addEventListener('click', ()=>{ document.getElementById('loginModal').classList.add('hidden'); document.getElementById('loginModal').classList.remove('flex'); });
+
+  document.getElementById('registerBtn').addEventListener('click', ()=>{
+    const email = document.getElementById('uEmail').value.trim(); const pass = document.getElementById('uPass').value;
+    if(!email||!pass) return alert('Provide email and password');
+    const store = readStore(); store.users = store.users||{};
+    if(store.users[email]) return alert('User exists. Please login.');
+    store.users[email] = {password:pass, profiles:[], activities:[]}; writeStore(store); localStorage.setItem('natal_user', JSON.stringify({email})); updateProfileView(); renderActivities(); alert('Registered & logged in');
+  });
+
+  document.getElementById('loginBtn').addEventListener('click', ()=>{
+    const email = document.getElementById('uEmail').value.trim(); const pass = document.getElementById('uPass').value;
+    const store = readStore(); if(!store.users || !store.users[email]) return alert('User not found');
+    if(store.users[email].password !== pass) return alert('Password incorrect');
+    localStorage.setItem('natal_user', JSON.stringify({email})); updateProfileView(); renderActivities(); alert('Logged in');
+  });
+
+  document.getElementById('logoutBtn').addEventListener('click', ()=>{ localStorage.removeItem('natal_user'); updateProfileView(); renderActivities(); });
+
+  function updateProfileView(){ const u = currentUser(); if(u){ document.getElementById('anonForm').classList.add('hidden'); document.getElementById('profileView').classList.remove('hidden'); document.getElementById('profileEmail').textContent = 'Signed in: '+u.email; } else { document.getElementById('anonForm').classList.remove('hidden'); document.getElementById('profileView').classList.add('hidden'); }}
+
+  // Activity renderer
+  function renderActivities(){ const list = document.getElementById('activityList'); list.innerHTML=''; const user = currentUser(); const store = readStore(); let acts = [];
+    if(user && store.users && store.users[user.email]) acts = store.users[user.email].activities || [];
+    else acts = store.activities || [];
+    for(const a of acts.slice(0,50)){
+      const li = document.createElement('li'); li.className='bg-white/5 p-3 rounded-md';
+      const time = new Date(a.result?.generatedAt||Date.now()).toLocaleString();
+      li.innerHTML = `<div class="flex justify-between"><div><strong>${a.type}</strong> — ${a.result?.name||''}</div><div class="text-xs opacity-70">${time}</div></div><div class="text-xs mt-1 opacity-80">Sign: ${a.result?.sign||''} • LifePath: ${a.result?.lifePath||''}</div>`;
+      list.appendChild(li);
+    }
+  }
+
+  document.getElementById('clearHistory').addEventListener('click', ()=>{
+    const user = currentUser(); const store=readStore(); if(user && store.users && store.users[user.email]){ store.users[user.email].activities=[]; writeStore(store); } else { store.activities=[]; writeStore(store); } renderActivities();
+  });
+
+  // Initial render
+  renderActivities(); updateProfileView();
+
+  // ---------- Support Request flow ----------
+  document.getElementById('reqSupport').addEventListener('click', ()=>{ document.getElementById('supportModal').classList.remove('hidden'); document.getElementById('supportModal').classList.add('flex'); });
+  document.getElementById('closeSupport').addEventListener('click', ()=>{ document.getElementById('supportModal').classList.add('hidden'); document.getElementById('supportModal').classList.remove('flex'); });
+
+  document.getElementById('supportForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const sname = document.getElementById('sName').value.trim();
+    const semail = document.getElementById('sEmail').value.trim();
+    const smsg = document.getElementById('sMsg').value.trim();
+    if(!sname||!semail) return alert('Provide name and email');
+
+    const req = {name:sname,email:semail,message:smsg, created:new Date().toISOString()};
+    const store = readStore(); store.requests = store.requests||[]; store.requests.unshift(req); writeStore(store);
+
+    // open mailto draft for user convenience (does not send automatically)
+    const subject = encodeURIComponent('One-on-One Spiritual Support Request');
+    const body = encodeURIComponent(`Name: ${sname}
+Email: ${semail}
+Message:
+${smsg}`);
+    window.location.href = `mailto:support@example.com?subject=${subject}&body=${body}`;
+
+    alert('Request saved and mail client opened. Admin will see it in dashboard.');
+    document.getElementById('supportModal').classList.add('hidden'); document.getElementById('supportModal').classList.remove('flex');
+  });
+
+  // ---------- Admin ----------
+  document.getElementById('openAdmin').addEventListener('click', ()=>{ document.getElementById('adminModal').classList.remove('hidden'); document.getElementById('adminModal').classList.add('flex'); });
+  document.getElementById('closeAdmin').addEventListener('click', ()=>{ document.getElementById('adminModal').classList.add('hidden'); document.getElementById('adminModal').classList.remove('flex'); });
+
+  document.getElementById('adminLoginBtn').addEventListener('click', ()=>{
+    const pass = document.getElementById('adminPass').value;
+    // default admin password: admin123 (change in production)
+    if(pass !== 'admin123') return alert('Admin password incorrect');
+    document.getElementById('adminLoginArea').classList.add('hidden'); document.getElementById('adminArea').classList.remove('hidden'); renderAdmin();
+  });
+
+  document.getElementById('adminLogoutBtn').addEventListener('click', ()=>{ document.getElementById('adminLoginArea').classList.remove('hidden'); document.getElementById('adminArea').classList.add('hidden'); });
+
+  function renderAdmin(){ const store = readStore(); const reqList = document.getElementById('requestsList'); const profiles = document.getElementById('savedProfiles'); reqList.innerHTML=''; profiles.innerHTML='';
+    (store.requests||[]).forEach(r=>{ const li=document.createElement('li'); li.className='bg-white/5 p-3 rounded-md'; li.innerHTML=`<div class=\"flex justify-between\"><div><strong>${r.name}</strong> — ${r.email}</div><div class=\"text-xs opacity-70\">${new Date(r.created).toLocaleString()}</div></div><div class=\"text-sm opacity-80 mt-1\">${r.message}</div>`; reqList.appendChild(li); });
+    const users = store.users||{}; for(const email in users){ const u = users[email]; const li=document.createElement('li'); li.className='bg-white/5 p-3 rounded-md'; li.innerHTML=`<div><strong>${email}</strong> — Profiles: ${u.profiles?u.profiles.length:0}</div><div class=\"text-xs opacity-70 mt-1\">Activities: ${u.activities?u.activities.length:0}</div>`; profiles.appendChild(li); }
+  }
+
+  // Expose renderAdmin to global so admin can refresh
+  window.renderAdmin = renderAdmin;
+  </script>
 </body>
 </html>
