@@ -1,491 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Full‑HD Natal (Nata) Chart & Numerology App — Improved</title>
-  <style>
-    /* --- HD LAYOUT & DESIGN SYSTEM --- */
-    :root {
-        --bg: #f5f7fa;
-        --card-bg: #ffffff;
-        --text: #1a1a1a;
-        --accent: #3949ab;
-        --accent-light: #6f7ce8;
-        --shadow: 0 8px 20px rgba(0,0,0,0.08);
-        --radius: 18px;
-        --transition: 0.25s ease-in-out;
-        --gradient: linear-gradient(135deg, #3949ab, #6f7ce8);
-    }
-
-    body {
-        font-family: 'Segoe UI', Roboto, sans-serif;
-        background: var(--bg);
-        margin: 0;
-        padding: 0;
-        color: var(--text);
-        line-height: 1.6;
-    }
-
-    h1, h2, h3 {
-        font-weight: 700;
-        margin-bottom: 6px;
-    }
-
-    .container {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 30px;
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-    }
-
-    .title {
-        text-align: center;
-        font-size: 2.7rem;
-        background: var(--gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 30px;
-    }
-
-    .form-section {
-        padding: 25px;
-        background: #ffffff;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        margin-bottom: 30px;
-    }
-
-    input, select, button {
-        width: 100%;
-        padding: 14px;
-        border-radius: var(--radius);
-        border: 1px solid #ccc;
-        margin-top: 10px;
-        font-size: 1rem;
-        transition: var(--transition);
-    }
-
-    input:focus, select:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px rgba(57,73,171,0.2);
-        outline: none;
-    }
-
-    button {
-        background: var(--gradient);
-        color: #fff;
-        cursor: pointer;
-        font-weight: 600;
-        margin-top: 20px;
-        border: none;
-    }
-
-    button:hover {
-        opacity: 0.92;
-        transform: translateY(-2px);
-    }
-
-    .results-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin-top: 40px;
-    }
-
-    .card {
-        background: var(--card-bg);
-        padding: 25px;
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
-        transition: var(--transition);
-    }
-
-    .card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 26px rgba(0,0,0,0.12);
-    }
-
-    .card h3 {
-        color: var(--accent);
-        margin-bottom: 10px;
-    }
-
-    .highlight-number {
-        font-size: 3rem;
-        font-weight: bold;
-        background: var(--gradient);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 12px;
-        text-align: center;
-    }
-
-    .footer-note {
-        text-align: center;
-        margin-top: 40px;
-        font-size: 0.9rem;
-        opacity: 0.6;
-    }
-
-    /* Responsive */
-    @media(max-width: 600px) {
-        .title { font-size: 2rem; }
-        .container { padding: 15px; }
-    }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HD Nata Chart App</title>
+  <!-- TailwindCSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div class="app" role="application" aria-label="Natal Chart & Numerology App">
-    <aside class="sidebar">
-      <h1>Natal Chart & Numerology — Improved</h1>
-      <p class="lead">Enter full name and date of birth. This improved version provides detailed, contextual explanations for results (astrology, numerology, Chinese zodiac) and adds African-tradition overlays (Akan day names + culturally-aware guidance).</p>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8">
+    <h1 class="text-4xl font-bold text-center text-indigo-700 mb-6">Nata Chart App</h1>
 
-      <form id="natalForm" onsubmit="return false;">
-        <label for="fullName">Full name</label>
-        <input id="fullName" class="input" placeholder="e.g. Jane Doe" required />
-
-        <label for="dobDay">Date of birth</label>
-        <div class="row">
-          <input id="dobDay" class="input small" type="number" min="1" max="31" placeholder="Day" required />
-          <select id="dobMonth" class="input small">
-            <option value="1">January</option>
-            <option value="2">February</option>
-            <option value="3">March</option>
-            <option value="4">April</option>
-            <option value="5">May</option>
-            <option value="6">June</option>
-            <option value="7">July</option>
-            <option value="8">August</option>
-            <option value="9">September</option>
-            <option value="10">October</option>
-            <option value="11">November</option>
-            <option value="12">December</option>
-          </select>
-          <input id="dobYear" class="input small" type="number" min="1000" max="9999" placeholder="Year" required />
-        </div>
-
-        <label for="birthPlace">Optional: Place (city, country)</label>
-        <input id="birthPlace" class="input" placeholder="e.g. Monrovia, Liberia" />
-
-        <div class="controls">
-          <button class="btn" id="calcBtn">Generate Chart</button>
-          <button class="btn" id="resetBtn" type="button" style="background:#334155">Reset</button>
-          <button class="btn" id="printBtn" type="button" style="background:#0ea5a4">Print / Export</button>
-        </div>
-
-        <div class="small-muted" style="margin-top:10px">Notes: Life Path uses Pythagorean reduction (11 & 22 retained). Expression number uses Pythagorean letter mapping. Akan Day Name computed from weekday (Ghanaian tradition). Descriptions are archetypal and culturally sensitive.</div>
-      </form>
-    </aside>
-
-    <main class="result-pane">
-      <div class="top-summary">
-        <div class="card" style="flex:0 0 220px">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div class="muted">Name</div>
-              <div id="outName" style="font-weight:700">—</div>
-            </div>
-            <div style="text-align:right">
-              <div class="muted">Age</div>
-              <div id="outAge" class="big-number">—</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="flex:1">
-          <div class="card" style="padding:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-            <div style="min-width:160px">
-              <div class="muted">Sun sign</div>
-              <div id="outSun" style="font-weight:700;font-size:16px">—</div>
-            </div>
-            <div style="min-width:160px">
-              <div class="muted">Life Path</div>
-              <div id="outLife" style="font-weight:700;font-size:16px">—</div>
-            </div>
-            <div style="min-width:160px">
-              <div class="muted">Expression</div>
-              <div id="outExpr" style="font-weight:700;font-size:16px">—</div>
-            </div>
-            <div style="min-width:160px">
-              <div class="muted">Chinese Zodiac</div>
-              <div id="outChinese" style="font-weight:700;font-size:16px">—</div>
-            </div>
-            <div style="min-width:140px">
-              <div class="muted">Akan Day Name</div>
-              <div id="outAkan" style="font-weight:700;font-size:16px">—</div>
-            </div>
-          </div>
-        </div>
-
-        <div style="width:220px">
-          <div class="card" id="quickAttrs">
-            <div class="muted">Quick Attributes</div>
-            <div id="outAttrs" style="margin-top:10px">—</div>
-          </div>
-        </div>
+    <!-- Form Section -->
+    <form id="nataForm" class="grid grid-cols-1 md:grid-cols-3 gap-4 bg-indigo-50 p-6 rounded-xl shadow-md">
+      <div>
+        <label class="block font-semibold mb-1">Name</label>
+        <input type="text" id="name" required class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500" />
       </div>
 
-      <section style="margin-top:12px">
-        <h3 style="margin:0">Chart Table</h3>
-        <p class="muted">Computed items with expanded explanations.</p>
+      <div>
+        <label class="block font-semibold mb-1">Month</label>
+        <input type="number" id="month" min="1" max="12" required class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500" />
+      </div>
 
-        <table aria-live="polite">
-          <thead>
-            <tr><th>Property</th><th>Value</th><th>Short note</th></tr>
-          </thead>
-          <tbody id="chartTable">
-            <tr><td>Date of birth</td><td id="tdDob">—</td><td id="tdDobNote"></td></tr>
-            <tr><td>Age (years)</td><td id="tdAge">—</td><td></td></tr>
-            <tr><td>Sun sign</td><td id="tdSun">—</td><td id="tdSunNote"></td></tr>
-            <tr><td>Life Path</td><td id="tdLife">—</td><td id="tdLifeNote"></td></tr>
-            <tr><td>Expression Number</td><td id="tdExpr">—</td><td id="tdExprNote"></td></tr>
-            <tr><td>Chinese Zodiac</td><td id="tdChinese">—</td><td id="tdChineseNote"></td></tr>
-            <tr><td>Akan Day Name</td><td id="tdAkan">—</td><td id="tdAkanNote"></td></tr>
-          </tbody>
-        </table>
+      <div>
+        <label class="block font-semibold mb-1">Day</label>
+        <input type="number" id="day" min="1" max="31" required class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500" />
+      </div>
 
-        <div class="grid" id="attributesGrid"></div>
+      <div class="md:col-span-3">
+        <label class="block font-semibold mb-1">Year</label>
+        <input type="number" id="year" min="1900" max="2100" required class="w-full p-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-indigo-500" />
+      </div>
 
-        <div class="explain" id="detailedExplanation">
-          <h4 style="margin:0">Detailed Explanations</h4>
-          <div id="explainContent" class="small-muted" style="margin-top:10px">No results yet. Click Generate Chart to see detailed interpretations and culturally-aware recommendations (rituals, proverbs, community roles) that are general and respectful.</div>
-        </div>
-      </section>
+      <div class="md:col-span-3 flex justify-center mt-4">
+        <button type="submit" class="bg-indigo-600 text-white px-6 py-3 rounded-xl shadow hover:bg-indigo-700 transition">Generate Nata Chart</button>
+      </div>
+    </form>
 
-    </main>
+    <!-- Output Section -->
+    <div id="result" class="mt-8 hidden">
+      <h2 class="text-3xl font-bold text-indigo-700 mb-4">🔮 Your Nata Chart Results</h2>
+
+      <div class="space-y-4" id="outputContent"></div>
+    </div>
   </div>
 
-  <script>
-    // Utilities
-    function $(id){return document.getElementById(id)}
-    function reduceNumber(n){
-      n = Number(n);
-      while(n>9 && n!==11 && n!==22){ n = String(n).split('').reduce((s,d)=>s+Number(d),0); }
-      return n;
+<script>
+function reduceToSingleDigit(num) {
+  while (num > 9) {
+    num = num.toString().split('').reduce((a, b) => a + parseInt(b), 0);
+  }
+  return num;
+}
+
+function getSunSign(month, day) {
+  const signs = [
+    { sign: "Capricorn", start: "12-22", end: "01-19", element: "Earth"},
+    { sign: "Aquarius", start: "01-20", end: "02-18", element: "Air"},
+    { sign: "Pisces", start: "02-19", end: "03-20", element: "Water"},
+    { sign: "Aries", start: "03-21", end: "04-19", element: "Fire"},
+    { sign: "Taurus", start: "04-20", end: "05-20", element: "Earth"},
+    { sign: "Gemini", start: "05-21", end: "06-20", element: "Air"},
+    { sign: "Cancer", start: "06-21", end: "07-22", element: "Water"},
+    { sign: "Leo", start: "07-23", end: "08-22", element: "Fire"},
+    { sign: "Virgo", start: "08-23", end: "09-22", element: "Earth"},
+    { sign: "Libra", start: "09-23", end: "10-22", element: "Air"},
+    { sign: "Scorpio", start: "10-23", end: "11-21", element: "Water"},
+    { sign: "Sagittarius", start: "11-22", end: "12-21", element: "Fire"}
+  ];
+
+  const birth = parseInt(`${month.toString().padStart(2,'0')}${day.toString().padStart(2,'0')}`);
+
+  for (const s of signs) {
+    const start = parseInt(s.start.replace('-', ''));
+    const end = parseInt(s.end.replace('-', ''));
+
+    if ((birth >= start && birth <= end) || (start > end && (birth >= start || birth <= end))) {
+      return s;
     }
+  }
+}
 
-    function calcAge(day,month,year){
-      const today = new Date();
-      const dob = new Date(year, month-1, day);
-      let age = today.getFullYear() - dob.getFullYear();
-      const m = today.getMonth() - dob.getMonth();
-      if(m<0 || (m===0 && today.getDate() < dob.getDate())) age--;
-      return age >= 0 ? age : 0;
-    }
+function getChineseZodiac(year) {
+  const animals = ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"];
+  return animals[(year - 4) % 12];
+}
 
-    function getSunSign(day,month){
-      const zodiac = [
-        {name:'Capricorn', from: {m:1,d:1}, to:{m:1,d:19}},
-        {name:'Aquarius', from:{m:1,d:20}, to:{m:2,d:18}},
-        {name:'Pisces', from:{m:2,d:19}, to:{m:3,d:20}},
-        {name:'Aries', from:{m:3,d:21}, to:{m:4,d:19}},
-        {name:'Taurus', from:{m:4,d:20}, to:{m:5,d:20}},
-        {name:'Gemini', from:{m:5,d:21}, to:{m:6,d:20}},
-        {name:'Cancer', from:{m:6,d:21}, to:{m:7,d:22}},
-        {name:'Leo', from:{m:7,d:23}, to:{m:8,d:22}},
-        {name:'Virgo', from:{m:8,d:23}, to:{m:9,d:22}},
-        {name:'Libra', from:{m:9,d:23}, to:{m:10,d:22}},
-        {name:'Scorpio', from:{m:10,d:23}, to:{m:11,d:21}},
-        {name:'Sagittarius', from:{m:11,d:22}, to:{m:12,d:21}},
-        {name:'Capricorn', from:{m:12,d:22}, to:{m:12,d:31}}
-      ];
-      for(const z of zodiac){
-        const start = new Date(2000, z.from.m-1, z.from.d);
-        const end = new Date(2000, z.to.m-1, z.to.d);
-        const cur = new Date(2000, month-1, day);
-        if(cur>=start && cur<=end) return z.name;
-      }
-      return 'Unknown';
-    }
+function getAfricanTraditionNumber(day, month, year) {
+  return reduceToSingleDigit(day + month + year);
+}
 
-    function lifePathFromDOB(day,month,year){
-      const digits = `${String(day).padStart(2,'0')}${String(month).padStart(2,'0')}${String(year)}`;
-      const total = digits.split('').reduce((s,d)=>s+Number(d),0);
-      return reduceNumber(total);
-    }
+// Handle form submit
 
-    const pythagorean = {
-      A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,
-      J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,
-      S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8
-    };
+document.getElementById("nataForm").addEventListener("submit", function(event) {
+  event.preventDefault();
 
-    function expressionNumberFromName(name){
-      const letters = name.toUpperCase().replace(/[^A-Z]/g,'');
-      if(!letters) return 0;
-      let total = 0;
-      for(const ch of letters){ total += pythagorean[ch] || 0 }
-      return reduceNumber(total);
-    }
+  const name = document.getElementById("name").value;
+  const month = parseInt(document.getElementById("month").value);
+  const day = parseInt(document.getElementById("day").value);
+  const year = parseInt(document.getElementById("year").value);
 
-    function chineseZodiac(year){
-      const animals = ['Rat','Ox','Tiger','Rabbit','Dragon','Snake','Horse','Goat','Monkey','Rooster','Dog','Pig'];
-      return animals[(year - 4) % 12];
-    }
+  const age = new Date().getFullYear() - year;
+  const lifePath = reduceToSingleDigit(day + month + year);
+  const expressionNumber = reduceToSingleDigit(name.replace(/[^A-Za-z]/g, '').toUpperCase().split('').map(ch => ch.charCodeAt(0) - 64).reduce((a,b)=>a+b, 0));
 
-    function weekday(day,month,year){
-      const d = new Date(year, month-1, day);
-      return d.getDay(); // 0 Sun .. 6 Sat
-    }
+  const sun = getSunSign(month, day);
+  const chinese = getChineseZodiac(year);
+  const african = getAfricanTraditionNumber(day, month, year);
 
-    function akanDayName(day,month,year,gender='unknown'){
-      // Akan day names (Ghana) — male/female variants
-      const male = ['Kwasi','Kwadwo','Kwabena','Kwaku','Yaw','Kofi','Kwame'];
-      const female = ['Akosua','Adwoa','Abenaa','Akua','Yaa','Afua','Ama'];
-      const w = weekday(day,month,year);
-      if(gender.toLowerCase().startsWith('m')) return male[w];
-      if(gender.toLowerCase().startsWith('f')) return female[w];
-      return `${male[w]} / ${female[w]}`;
-    }
+  const output = `
+    <div class='p-6 bg-indigo-100 rounded-xl shadow'>
+      <h3 class='text-2xl font-bold text-indigo-800'>👤 Personal Info</h3>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Age:</strong> ${age}</p>
+    </div>
 
-    // Descriptions (expanded)
-    const sunAttrs = {
-      'Aries':'Bold and initiating energy. Aries people typically lead, take risks, and have a direct style. They respond well to challenge and can teach others about courage and starting new things.',
-      'Taurus':'Grounded, patient, and values stability. Taurus often excels at building, caretaking, and tending resources. They bring steadiness to communities.',
-      'Gemini':'Communicative and adaptable. Geminis are idea carriers, storytellers, and excellent at connecting people and information.',
-      'Cancer':'Nurturing and sensitive. Strong ties to home, family, and community memory. Often keepers of oral history and caregivers.',
-      'Leo':'Confident, warm, and expressive. Leos inspire through generosity and often take visible leadership roles in ceremonies and festivals.',
-      'Virgo':'Analytical and service-oriented. Virgos are practical helpers, organizers, and attentive to craft and ritual details.',
-      'Libra':'Harmonizing, diplomatic, and justice-oriented. Libra energy helps mediate disputes and design beauty in social spaces.',
-      'Scorpio':'Deep, intense, and transformational. Scorpios process crisis and renewal, often associated with initiation and rites of passage.',
-      'Sagittarius':'Explorer and teacher. Sags bring philosophy, travel stories, and a love of wide perspectives.',
-      'Capricorn':'Responsible and strategic. Capricorns steward institutions and long-term projects in communities.',
-      'Aquarius':'Innovator and humanitarian. Aquarius can champion collective progress and technological or social reform.',
-      'Pisces':'Compassionate, imaginative, and spiritually receptive. Often engaged with music, healing, and dreamwork.'
-    };
+    <div class='p-6 bg-white rounded-xl shadow'>
+      <h3 class='text-2xl font-bold text-indigo-800'>☀ Sun Sign (${sun.sign})</h3>
+      <p><strong>Element:</strong> ${sun.element}</p>
+      <p>Your sun sign describes your identity, personality core, and natural strengths.</p>
+    </div>
 
-    const lifeAttrs = {
-      1:'Leadership, initiative, independence. (Proverb: "If you want to go fast, go alone; if you want to go far, go together.")',
-      2:'Cooperation, diplomacy, and sensitivity to relationships. (Community-oriented roles.)',
-      3:'Creative communication, storytelling, and cultural expression.',
-      4:'Practical building, stability, dedication and craft.',
-      5:'Adaptable, mobile, change-embracing; often traders or messengers in old societies.',
-      6:'Caretaker, often family or community-focused — responsible and service-minded.',
-      7:'Seeker and wise one — introspective, often a scholar, diviner or elder-in-training.',
-      8:'Manager and organizer of resources — able to bring large projects to fruition.',
-      9:'Sage and humanitarian — oriented toward community-wide healing and generosity.',
-      11:'Visionary and inspirational leader. (Master number — spiritual calling)',
-      22:'Master builder — combines vision with practical power to create institutions.'
-    };
+    <div class='p-6 bg-indigo-100 rounded-xl shadow'>
+      <h3 class='text-2xl font-bold text-indigo-800'>🔢 Life Path Number: ${lifePath}</h3>
+      <p>This number reveals your destiny, spiritual purpose, and natural calling.</p>
+    </div>
 
-    const exprAttrs = Object.assign({}, lifeAttrs);
+    <div class='p-6 bg-white rounded-xl shadow'>
+      <h3 class='text-2xl font-bold text-indigo-800'>🔠 Expression Number: ${expressionNumber}</h3>
+      <p>This number explains your natural talents, gifts, and personality expression.</p>
+    </div>
 
-    const chineseAttrs = {
-      'Rat':'Resourceful and quick — able to see opportunities and adapt.',
-      'Ox':'Patient and dependable — respected as steady workers.',
-      'Tiger':'Courageous and bold — natural leaders in crisis.',
-      'Rabbit':'Gentle and diplomatic — good mediators and artisans.',
-      'Dragon':'Energetic and charismatic — inspires others and takes initiatives.',
-      'Snake':'Reflective and graceful — good strategists.',
-      'Horse':'Free-spirited, energetic and mobile.',
-      'Goat':'Peaceful, artistic, and community-minded.',
-      'Monkey':'Clever, inventive and playful.',
-      'Rooster':'Conscientious and exacting — good at details.',
-      'Dog':'Loyal and protective — strong in social support roles.',
-      'Pig':'Generous and diligent — valued for care-giving.'
-    };
+    <div class='p-6 bg-indigo-100 rounded-xl shadow'>
+      <h3 class='text-2xl font-bold text-indigo-800'>🐉 Chinese Zodiac: ${chinese}</h3>
+      <p>Your Chinese zodiac sign symbolizes deeper personality attributes and fate cycles.</p>
+    </div>
 
-    const akanAttrs = {
-      'Kwasi':'Sunday-born: often generous, creative — associated with beginnings and sunlight.',
-      'Kwadwo':'Monday-born: calm, patient, responsible — good caretakers.',
-      'Kwabena':'Tuesday-born: energetic and competitive; effective in dynamic roles.',
-      'Kwaku':'Wednesday-born: communicative and clever; strong in trade or messages.',
-      'Yaw':'Thursday-born: determined and visionary; often community builders.',
-      'Kofi':'Friday-born: social, lucky, and often successful in partnerships.',
-      'Kwame':'Saturday-born: reflective, strong-willed and respected as elder-type figures.'
-    };
+    <div class='p-6 bg-white rounded-xl shadow'>
+      <h3 class='text-2xl font-bold text-indigo-800'>🌍 African Tradition Destiny Number: ${african}</h3>
+      <p>This number reflects ancestral energy, spiritual alignment, and cultural destiny patterns.</p>
+    </div>
+  `;
 
-    // Render
-    function renderAttributes({name,day,month,year,age,sun,life,expr,chinese,akan}){
-      $('outName').textContent = name || '—';
-      $('outAge').textContent = age;
-      $('outSun').textContent = sun;
-      $('outLife').textContent = life;
-      $('outExpr').textContent = expr;
-      $('outChinese').textContent = chinese;
-      $('outAkan').textContent = akan;
-
-      $('tdDob').textContent = `${String(day).padStart(2,'0')}/${String(month).padStart(2,'0')}/${year}`;
-      $('tdAge').textContent = age;
-      $('tdSun').textContent = sun;
-      $('tdLife').textContent = life;
-      $('tdExpr').textContent = expr;
-      $('tdChinese').textContent = chinese;
-      $('tdAkan').textContent = akan;
-
-      $('tdSunNote').textContent = sunAttrs[sun] || '';
-      $('tdLifeNote').textContent = lifeAttrs[life] || '';
-      $('tdExprNote').textContent = exprAttrs[expr] || '';
-      $('tdChineseNote').textContent = chineseAttrs[chinese] || '';
-      $('tdAkanNote').textContent = akanAttrs[akan.split(' ')[0]] || '';
-
-      const quick = [sunAttrs[sun], lifeAttrs[life], exprAttrs[expr], chineseAttrs[chinese]].filter(Boolean).slice(0,3).join(' ');
-      $('outAttrs').textContent = quick || '—';
-
-      // attribute cards
-      const grid = $('attributesGrid'); grid.innerHTML = '';
-      const cards = [
-        {title:'Sun sign', val:sun, desc:sunAttrs[sun]},
-        {title:'Life Path', val:life, desc:lifeAttrs[life]},
-        {title:'Expression', val:expr, desc:exprAttrs[expr]},
-        {title:'Chinese Zodiac', val:chinese, desc:chineseAttrs[chinese]},
-        {title:'Akan Day', val:akan, desc:akanAttrs[akan.split(' ')[0]]}
-      ];
-      for(const c of cards){
-        const el = document.createElement('div'); el.className='attribute card';
-        el.innerHTML = `<strong>${c.title}: ${c.val}</strong><div style="margin-top:8px;color:var(--muted)">${c.desc || ''}</div>`;
-        grid.appendChild(el);
-      }
-
-      // Detailed explanation section
-      const explain = [];
-      explain.push(`<strong>Sun sign — ${sun}</strong><div>${sunAttrs[sun] || ''}</div>`);
-      explain.push(`<strong>Life Path — ${life}</strong><div>${lifeAttrs[life] || ''}</div>`);
-      explain.push(`<strong>Expression Number — ${expr}</strong><div>${exprAttrs[expr] || ''}</div>`);
-      explain.push(`<strong>Chinese Zodiac — ${chinese}</strong><div>${chineseAttrs[chinese] || ''}</div>`);
-      explain.push(`<strong>Akan Day Name — ${akan}</strong><div>${akanAttrs[akan.split(' ')[0]] || ''}</div>`);
-
-      // Cultural guidance (general, respectful)
-      explain.push(`<strong>Cultural & Ancestral Guidance</strong><div>In many African traditions, the day of birth, community role, and family lineage shape responsibilities and rituals. Use these results as a starting point to explore local elders, proverbs, and community practices. Suggested approaches: consult a trusted elder, use proverbs to reflect on your Life Path, and apply your Expression number to skills and crafts that serve the community. This app provides archetypal guidance, not prescriptive cultural rules.</div>`);
-
-      $('explainContent').innerHTML = explain.join('<hr style="opacity:0.06">');
-    }
-
-    // Main compute
-    $('calcBtn').addEventListener('click', ()=>{
-      const name = $('fullName').value.trim() || 'Unknown';
-      const day = Number($('dobDay').value);
-      const month = Number($('dobMonth').value);
-      const year = Number($('dobYear').value);
-      if(!day || !month || !year) return alert('Please provide a valid day, month and year.');
-
-      const testDate = new Date(year, month-1, day);
-      if(testDate.getDate() !== day){ return alert('The day is invalid for that month/year.'); }
-
-      const age = calcAge(day,month,year);
-      const sun = getSunSign(day,month);
-      const life = lifePathFromDOB(day,month,year);
-      const expr = expressionNumberFromName(name);
-      const chinese = chineseZodiac(year);
-      const akan = akanDayName(day,month,year);
-
-      renderAttributes({name,day,month,year,age,sun,life,expr,chinese,akan});
-    });
-
-    $('resetBtn').addEventListener('click', ()=>{
-      $('fullName').value='';$('dobDay').value='';$('dobMonth').value='1';$('dobYear').value='';$('birthPlace').value='';
-      ['outName','outAge','outSun','outLife','outExpr','outChinese','outAkan','outAttrs'].forEach(id=>$(id).textContent='—');
-      ['tdDob','tdAge','tdSun','tdLife','tdExpr','tdChinese','tdAkan'].forEach(id=>$(id).textContent='—');
-      $('attributesGrid').innerHTML='';$('explainContent').textContent='No results yet. Click Generate Chart to see detailed interpretations.';
-    });
-
-    $('printBtn').addEventListener('click', ()=>{ window.print(); });
-
-    ['fullName','dobDay','dobMonth','dobYear'].forEach(id=>$(id).addEventListener('keydown', (e)=>{ if(e.key==='Enter') $('calcBtn').click(); }));
-
-  </script>
+  document.getElementById("outputContent").innerHTML = output;
+  document.getElementById("result").classList.remove("hidden");
+});
+</script>
 </body>
 </html>
