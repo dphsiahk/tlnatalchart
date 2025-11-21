@@ -1,408 +1,139 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HD Natal Chart App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-full bg-gray-100 text-gray-900">
+  <div class="max-w-5xl mx-auto p-6">
+    <header class="text-center mb-10">
+      <h1 class="text-4xl font-bold mb-2">HD Natal Chart & Numerology App</h1>
+      <p class="text-lg text-gray-600">African + Liberian Traditional Insight Edition</p>
+    </header>
 
-// NatalChartApp.jsx
-// Single-file React component built with Tailwind CSS classes.
-// - Collects natal data (name, birthdate, time, place, culture preference)
-// - Calculates Sun sign and Life Path (numerology)
-// - Produces detailed HD readout for sign: Attributes, Meaning, Focus Areas for Power & Strength,
-//   Spiritual Well-Being areas to focus for Wealth Growth, plus culturally-aware guidance
-// - Saves results to localStorage and allows export/print
+    <section class="bg-white p-6 rounded-2xl shadow-lg mb-10">
+      <h2 class="text-2xl font-semibold mb-4">Enter Your Natal Information</h2>
+      <form id="natalForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input type="text" id="name" placeholder="Full Name" class="p-3 border rounded-lg w-full" required />
+        <input type="number" id="month" placeholder="Birth Month (1-12)" class="p-3 border rounded-lg w-full" required />
+        <input type="number" id="day" placeholder="Birth Day (1-31)" class="p-3 border rounded-lg w-full" required />
+        <input type="number" id="year" placeholder="Birth Year" class="p-3 border rounded-lg w-full" required />
 
-export default function NatalChartApp() {
-  const [form, setForm] = useState({
-    name: '',
-    month: '',
-    day: '',
-    year: '',
-    time: '',
-    place: '',
-    culture: 'Global',
-  });
+        <button type="submit" class="md:col-span-2 mt-4 bg-blue-600 text-white p-3 rounded-xl hover:bg-blue-700">Generate Natal Chart</button>
+      </form>
+    </section>
 
-  const [result, setResult] = useState(null);
+    <section id="results" class="hidden bg-white p-6 rounded-2xl shadow-lg">
+      <h2 class="text-3xl font-bold mb-4">Your Natal Chart Results</h2>
+      <div id="zodiacResult" class="mb-6"></div>
+      <div id="numerologyResult" class="mb-6"></div>
+      <div id="africanResult" class="mb-6"></div>
+    </section>
+  </div>
 
-  useEffect(() => {
-    // load last session if present
-    const saved = localStorage.getItem('natal_last');
-    if (saved) setForm(JSON.parse(saved));
-  }, []);
+<script>
+// Zodiac signs
+function getZodiac(month, day) {
+  const zodiac = [
+    { sign: "Capricorn", start: [12, 22], end: [1, 19] },
+    { sign: "Aquarius", start: [1, 20], end: [2, 18] },
+    { sign: "Pisces", start: [2, 19], end: [3, 20] },
+    { sign: "Aries", start: [3, 21], end: [4, 19] },
+    { sign: "Taurus", start: [4, 20], end: [5, 20] },
+    { sign: "Gemini", start: [5, 21], end: [6, 20] },
+    { sign: "Cancer", start: [6, 21], end: [7, 22] },
+    { sign: "Leo", start: [7, 23], end: [8, 22] },
+    { sign: "Virgo", start: [8, 23], end: [9, 22] },
+    { sign: "Libra", start: [9, 23], end: [10, 22] },
+    { sign: "Scorpio", start: [10, 23], end: [11, 21] },
+    { sign: "Sagittarius", start: [11, 22], end: [12, 21] },
+  ];
 
-  const signs = {
-    Aries: {
-      range: [[3,21],[4,19]],
-      element: 'Fire',
-      ruler: 'Mars',
-      attributes: 'Bold, energetic, direct, pioneering, competitive.',
-      meaning: 'A natural initiator — acts first, thinks while doing. Learns by experience.',
-      power: 'Build leadership projects, physical training, clear goal-setting and rapid prototyping.',
-      spiritual: 'Practice disciplined breathwork, grounding rituals, build a personal warrior practice; invest energy into community leadership for resilient wealth.',
-    },
-    Taurus: {
-      range: [[4,20],[5,20]],
-      element: 'Earth',
-      ruler: 'Venus',
-      attributes: 'Stable, practical, sensuous, persistent, resource-focused.',
-      meaning: 'Seeks comfort and security; builds value slowly and steadily.',
-      power: 'Finance systems, property, craft & agriculture. Strengthen patience and long-term plans.',
-      spiritual: 'Develop stewardship rituals, gratitude practices, and wealth-holding traditions; use community savings groups (susu/rotating funds) found in African contexts to grow capital.',
-    },
-    Gemini: {
-      range: [[5,21],[6,20]],
-      element: 'Air',
-      ruler: 'Mercury',
-      attributes: 'Curious, communicative, adaptable, quick-witted, dual-natured.',
-      meaning: 'A connector — trades information and ideas.',
-      power: 'Media, teaching, sales, writing; network deliberately and document intellectual property.',
-      spiritual: 'Cultivate listening and elder-guided storytelling; in local traditions, preserve oral history as a source of cultural capital.',
-    },
-    Cancer: {
-      range: [[6,21],[7,22]],
-      element: 'Water',
-      ruler: 'Moon',
-      attributes: 'Nurturing, intuitive, protective, family-centered, memory-rich.',
-      meaning: 'Protects and tends the emotional container of home and tribe.',
-      power: 'Care economies, hospitality, healing; monetize compassionate skills ethically.',
-      spiritual: 'Ancestral offerings, moon-time rituals, elder blessings; honor ancestors to unlock communal support tied to economic resilience.',
-    },
-    Leo: {
-      range: [[7,23],[8,22]],
-      element: 'Fire',
-      ruler: 'Sun',
-      attributes: 'Confident, generous, creative, dramatic, leadership-oriented.',
-      meaning: 'Shines to inspire others; leads from warmth and charisma.',
-      power: 'Performing arts, entrepreneurship, public roles; leverage personal brand for influence and income.',
-      spiritual: 'Public gratitude rituals, creative offerings to community festivals; partner with cultural performers to build reputation and patronage.',
-    },
-    Virgo: {
-      range: [[8,23],[9,22]],
-      element: 'Earth',
-      ruler: 'Mercury',
-      attributes: 'Analytical, service-oriented, meticulous, health-focused.',
-      meaning: 'Refines systems — turns chaos into practical service and efficiency.',
-      power: 'Healthcare, logistics, quality control, consulting; build reliable processes that scale.',
-      spiritual: 'Herbal knowledge and practical healing traditions; blend scientific discipline with traditional remedies responsibly.',
-    },
-    Libra: {
-      range: [[9,23],[10,22]],
-      element: 'Air',
-      ruler: 'Venus',
-      attributes: 'Diplomatic, aesthetic, partnership-focused, fair-minded.',
-      meaning: 'Seeks balance and beauty; acts as mediator and cultural curator.',
-      power: 'Law, design, diplomacy, partnerships; form strategic alliances and co-ops.',
-      spiritual: 'Rituals that honor fairness, communal councils, and shared decision-making — align market contracts with cultural reciprocity.',
-    },
-    Scorpio: {
-      range: [[10,23],[11,21]],
-      element: 'Water',
-      ruler: 'Pluto/Mars',
-      attributes: 'Intense, transformational, secretive, resilient, focused.',
-      meaning: 'Masters depth, regeneration and taboo; excels at transformation work.',
-      power: 'Research, finance (investigation), therapy; manage resources with discretion and strategic reinvestment.',
-      spiritual: 'Initiation rites, cleansing ceremonies, deep ancestor work; transform setbacks into concentrated capital.',
-    },
-    Sagittarius: {
-      range: [[11,22],[12,21]],
-      element: 'Fire',
-      ruler: 'Jupiter',
-      attributes: 'Adventurous, philosophical, optimistic, freedom-seeking.',
-      meaning: 'Seeks truth and expansion; teaches and explores.',
-      power: 'Travel, education, export/import, cultural exchange; monetize expertise and trade routes.',
-      spiritual: 'Pilgrimage, cross-cultural study, ethical expansion; use diaspora networks for remittances and business growth.',
-    },
-    Capricorn: {
-      range: [[12,22],[1,19]],
-      element: 'Earth',
-      ruler: 'Saturn',
-      attributes: 'Disciplined, responsible, ambitious, patient, strategic.',
-      meaning: 'Builds durable structures and institutions; climbs steadily toward legacy goals.',
-      power: 'Governance, corporate leadership, infrastructure, long-term finance; adopt systems thinking and incremental milestones.',
-      spiritual: 'Ancestor contracts, rites of passage, work-ethic blessings; lean on elder mentorship and community trusteeships to secure multi-generational wealth.',
-    },
-    Aquarius: {
-      range: [[1,20],[2,18]],
-      element: 'Air',
-      ruler: 'Uranus/Saturn',
-      attributes: 'Innovative, group-oriented, humanitarian, progressive.',
-      meaning: 'Reimagines social systems and builds networks for collective progress.',
-      power: 'Tech, social enterprises, cooperatives; design inclusive platforms and shared ownership models.',
-      spiritual: 'Community-driven ceremonies, visionary circles; anchor innovations in local needs and traditions.',
-    },
-    Pisces: {
-      range: [[2,19],[3,20]],
-      element: 'Water',
-      ruler: 'Neptune/Jupiter',
-      attributes: 'Compassionate, imaginative, psychic, artistic.',
-      meaning: 'Transcends boundaries and channels healing and creativity.',
-      power: 'Arts, spiritual leadership, healing modalities; monetize creative practice while protecting boundaries.',
-      spiritual: 'Dream-work, water rituals, music and dance as medicine; collaborate with cultural healers for sustainable income paths.',
-    }
-  };
-
-  function monthDayToSign(month, day) {
-    // month: 1-12, day: 1-31
-    const m = parseInt(month);
-    const d = parseInt(day);
-    for (const [name, data] of Object.entries(signs)) {
-      const [[m1,d1],[m2,d2]] = data.range;
-      if ((m === m1 && d >= d1) || (m === m2 && d <= d2) || (m1 > m2 && ((m === m1 && d >= d1) || (m === m2 && d <= d2) || (m > m1 || m < m2)))) {
-        // handle Capricorn that spans year end
-        // simplified: check inclusive ranges
-        if (m1 <= m2) {
-          if ((m > m1 && m < m2) || (m === m1 && d >= d1) || (m === m2 && d <= d2)) return name;
-        } else {
-          // ranges that wrap year (e.g., Capricorn)
-          if ((m > m1 && m <= 12) || (m >= 1 && m < m2) || (m === m1 && d >= d1) || (m === m2 && d <= d2)) return name;
-        }
-      }
-    }
-    return 'Unknown';
+  for (const z of zodiac) {
+    if (
+      (month === z.start[0] && day >= z.start[1]) ||
+      (month === z.end[0] && day <= z.end[1])
+    ) return z.sign;
   }
-
-  function lifePathNumber(y, m, d) {
-    // Classic numerology life path: reduce sum of full birthdate digits
-    // Accept numeric strings
-    const digits = `${y}`.padStart(4,'0').replace(/\D/g,'') + `${m}`.padStart(2,'0') + `${d}`.padStart(2,'0');
-    function reduce(n) {
-      while (n > 9 && n !== 11 && n !== 22 && n !== 33) {
-        n = String(n).split('').reduce((a,b)=>a+Number(b),0);
-      }
-      return n;
-    }
-    const total = String(digits).split('').reduce((a,b)=>a+Number(b),0);
-    return reduce(total);
-  }
-
-  function numerologyAdvice(num) {
-    const adv = {
-      1: 'Leader energy. Focus: entrepreneurship, clear decision-making, visibility. Spiritual tip: daily goal-setting ritual and power posture; tap community backing deliberately.',
-      2: 'Partnership energy. Focus: collaborative enterprises, mediation, diplomacy. Spiritual: cultivate patience and shared capital pools (rotating savings).',
-      3: 'Creative energy. Focus: communications, arts, teaching. Spiritual: ritualized creative practice and community storytelling.',
-      4: 'Builder energy. Focus: structure, systems, savings. Spiritual: ancestor-led work, disciplined daily craft and skill mastery.',
-      5: 'Freedom energy. Focus: trade, travel, flexible income. Spiritual: pilgrimage and diaspora networking for financial channels.',
-      6: 'Caretaker energy. Focus: service-based businesses, community support. Spiritual: stewardship rituals, responsible lending and mutual aid.',
-      7: 'Seeker energy. Focus: research, specialized knowledge, consultancy. Spiritual: sacred study, retreats, and inner development.',
-      8: 'Power/abundance energy. Focus: finance, leadership, scalable ventures. Spiritual: ethical wealth rituals, trusteeship and legacy planning.',
-      9: 'Humanitarian energy. Focus: NGOs, social enterprises, cultural arts. Spiritual: community offerings and long-term philanthropy.',
-      11: 'Master intuitive energy. Focus: visionary leadership, inspiration-based enterprises. Spiritual: disciplined spiritual practice and service.',
-      22: 'Master builder energy. Focus: large-scale infrastructure, institutions, legacy projects. Spiritual: community contracts, long-run planning.',
-      33: 'Master teacher. Focus: education at scale, cultural transformation. Spiritual: combine service with high ethical standards.'
-    };
-    return adv[num] || 'Blend of energies — build rituals and systems that match your path.';
-  }
-
-  function onSubmit(e) {
-    e.preventDefault();
-    // minimal validation
-    if (!form.name || !form.month || !form.day || !form.year) {
-      alert('Please complete name, month, day and year.');
-      return;
-    }
-    const sign = monthDayToSign(Number(form.month), Number(form.day));
-    const lpn = lifePathNumber(form.year, form.month, form.day);
-    const signData = signs[sign] || {};
-
-    // culturally aware messages (brief templates)
-    const culturalNotes = {
-      Liberia: `In Liberian tradition, community elders, family lineage, and collective savings groups (Rotating Savings/"susu"-style groups) are powerful resources. Consider seeking elder blessings, participating in collective capital pools, and connecting with diasporic remittance networks for business growth.`,
-      "West African": `West African traditions value ancestor reverence, market guilds, and oral contracts. Use storytelling to establish reputation and trust in trading networks.`,
-      Global: `Blend modern planning with ancestral or community practices meaningful to you. Use both financial systems and trusted community structures.`
-    };
-
-    const payload = {
-      name: form.name,
-      birthdate: `${form.year}-${String(form.month).padStart(2,'0')}-${String(form.day).padStart(2,'0')}`,
-      time: form.time,
-      place: form.place,
-      culture: form.culture,
-      sign,
-      signData,
-      lifePath: lpn,
-      numerologyAdvice: numerologyAdvice(lpn),
-      culturalNote: culturalNotes[form.culture] || culturalNotes.Global,
-      generatedAt: new Date().toISOString(),
-    };
-
-    setResult(payload);
-    localStorage.setItem('natal_last', JSON.stringify(form));
-    localStorage.setItem('natal_result', JSON.stringify(payload));
-  }
-
-  function exportJSON() {
-    if (!result) return alert('No result to export.');
-    const blob = new Blob([JSON.stringify(result, null, 2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `${result.name.replace(/\s+/g,'_')}_natal.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  function printResult() {
-    window.print();
-  }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-indigo-900 text-slate-100 p-6">
-      <div className="max-w-6xl mx-auto bg-white/5 backdrop-blur-md rounded-2xl shadow-2xl overflow-hidden">
-        <header className="p-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-extrabold tracking-tight">Natal Chart — HD Reader</h1>
-            <p className="text-sm opacity-80 mt-1">Astrology x Advanced Numerology — culturally-aware guidance (includes Liberian/West African notes)</p>
-          </div>
-          <div className="text-right">
-            <p className="text-sm">High-Definition Visual & Print-ready</p>
-            <p className="text-xs opacity-70">Powered by Tailwind • Local only • No external APIs</p>
-          </div>
-        </header>
-
-        <main className="grid grid-cols-12 gap-6 p-6">
-          <form onSubmit={onSubmit} className="col-span-12 lg:col-span-4 bg-white/3 p-6 rounded-xl">
-            <h2 className="text-xl font-semibold mb-4">Enter Natal Data</h2>
-            <label className="block mb-2 text-sm">Full name</label>
-            <input value={form.name} onChange={(e)=>setForm({...form, name:e.target.value})} className="w-full p-3 rounded-md bg-white/10" placeholder="e.g., Joseph Doe" />
-
-            <div className="grid grid-cols-3 gap-2 mt-4">
-              <div>
-                <label className="block text-sm">Month</label>
-                <input value={form.month} onChange={(e)=>setForm({...form, month:e.target.value})} type="number" min="1" max="12" className="w-full p-2 rounded-md bg-white/10" />
-              </div>
-              <div>
-                <label className="block text-sm">Day</label>
-                <input value={form.day} onChange={(e)=>setForm({...form, day:e.target.value})} type="number" min="1" max="31" className="w-full p-2 rounded-md bg-white/10" />
-              </div>
-              <div>
-                <label className="block text-sm">Year</label>
-                <input value={form.year} onChange={(e)=>setForm({...form, year:e.target.value})} type="number" min="1900" max="2100" className="w-full p-2 rounded-md bg-white/10" />
-              </div>
-            </div>
-
-            <label className="block mt-4 text-sm">Time (optional)</label>
-            <input value={form.time} onChange={(e)=>setForm({...form, time:e.target.value})} placeholder="HH:MM (24h)" className="w-full p-2 rounded-md bg-white/10" />
-
-            <label className="block mt-4 text-sm">Place (optional)</label>
-            <input value={form.place} onChange={(e)=>setForm({...form, place:e.target.value})} placeholder="City, Country" className="w-full p-2 rounded-md bg-white/10" />
-
-            <label className="block mt-4 text-sm">Cultural lens</label>
-            <select value={form.culture} onChange={(e)=>setForm({...form, culture:e.target.value})} className="w-full p-2 rounded-md bg-white/10">
-              <option>Global</option>
-              <option>Liberia</option>
-              <option>West African</option>
-              <option>Other African</option>
-            </select>
-
-            <div className="mt-6 flex gap-3">
-              <button type="submit" className="flex-1 py-2 rounded-lg bg-amber-500 text-slate-900 font-semibold">Generate Readout</button>
-              <button type="button" onClick={()=>{setForm({name:'',month:'',day:'',year:'',time:'',place:'',culture:'Global'}); setResult(null);}} className="py-2 px-4 rounded-lg border border-white/10">Reset</button>
-            </div>
-
-            <p className="mt-4 text-xs opacity-70">This app focuses on Sun sign + Life Path numerology and offers culturally-informed suggestions. For full professional natal charts (houses/ascendant) include birth time & place and consult a professional astrologer.</p>
-          </form>
-
-          <section className="col-span-12 lg:col-span-8 p-6">
-            <div className="grid grid-cols-12 gap-6">
-              <div className="col-span-12 lg:col-span-5 bg-gradient-to-b from-white/5 to-white/2 p-6 rounded-xl shadow-inner">
-                <h3 className="text-lg font-semibold">Visual Natal Chart</h3>
-                <div className="mt-4 flex items-center justify-center">
-                  {/* Simple SVG placeholder for HD chart */}
-                  <svg viewBox="0 0 400 400" className="w-full h-auto max-w-md">
-                    <defs>
-                      <radialGradient id="g1" cx="50%" cy="40%">
-                        <stop offset="0%" stopColor="#fef3c7" stopOpacity="0.2" />
-                        <stop offset="100%" stopColor="#7c3aed" stopOpacity="0.05" />
-                      </radialGradient>
-                    </defs>
-                    <circle cx="200" cy="200" r="190" fill="url(#g1)" stroke="#ffffff22" strokeWidth="1" />
-                    <g transform="translate(200 200)">
-                      {/* 12-segment wheel */}
-                      {[...Array(12)].map((_,i)=>{
-                        const angle = (i/12)*Math.PI*2 - Math.PI/2;
-                        const x = Math.cos(angle)*150;
-                        const y = Math.sin(angle)*150;
-                        return <line key={i} x1="0" y1="0" x2={x} y2={y} stroke="#ffffff22" strokeWidth="1" />
-                      })}
-                    </g>
-                  </svg>
-                </div>
-                <p className="mt-4 text-sm opacity-80">HD wheel — this placeholder can be replaced with a full house/planet renderer when birth time & place are provided.</p>
-              </div>
-
-              <div className="col-span-12 lg:col-span-7 bg-white/3 p-6 rounded-xl">
-                <h3 className="text-lg font-semibold">Readout</h3>
-                {!result && <p className="mt-3 text-sm opacity-70">Complete the form to generate a detailed natal readout: Sun Sign, Life Path, focused advice and culturally-aware guidance for Power, Strength and Wealth Growth.</p>}
-
-                {result && (
-                  <div className="mt-3 space-y-4">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h4 className="text-2xl font-bold">{result.name}</h4>
-                        <p className="text-sm opacity-80">Born: {result.birthdate} {result.time ? `• ${result.time}` : ''} {result.place ? `• ${result.place}` : ''}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-semibold">Sun Sign</p>
-                        <p className="text-xl">{result.sign}</p>
-                        <p className="text-sm opacity-80">Life Path: {result.lifePath}</p>
-                      </div>
-                    </div>
-
-                    <div className="bg-white/5 p-4 rounded-md">
-                      <h5 className="font-semibold">Sign Profile</h5>
-                      <p className="mt-2 font-medium">Element: {result.signData.element} • Ruler: {result.signData.ruler}</p>
-                      <p className="mt-2">Attributes: {result.signData.attributes}</p>
-                      <p className="mt-2">Meaning: {result.signData.meaning}</p>
-                    </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="p-4 bg-white/5 rounded-md">
-                        <h5 className="font-semibold">Power & Strength — Focus Areas</h5>
-                        <p className="mt-2">{result.signData.power}</p>
-                        <div className="mt-2 text-sm opacity-80">Practical steps: <ul className="list-disc ml-4 mt-1"><li>Set 90-day goals tied to incremental milestones.</li><li>Create a community or financial partner responsive to your sign's strengths.</li><li>Document and protect intellectual assets or trade relationships.</li></ul></div>
-                      </div>
-
-                      <div className="p-4 bg-white/5 rounded-md">
-                        <h5 className="font-semibold">Spiritual Well-Being & Wealth Growth</h5>
-                        <p className="mt-2">{result.signData.spiritual}</p>
-                        <div className="mt-2 text-sm opacity-80">Wealth rituals & culturally-aware actions: <ul className="list-disc ml-4 mt-1"><li>Engage elders or cultural leaders for blessings on big ventures.</li><li>Use local rotating savings systems and trusted remittance channels.</li><li>Formalize agreements in writing while honoring oral traditions.</li></ul></div>
-                      </div>
-                    </div>
-
-                    <div className="p-4 rounded-md bg-gradient-to-r from-amber-800/20 to-rose-800/5">
-                      <h5 className="font-semibold">Numerology — Life Path</h5>
-                      <p className="mt-2">Your Life Path number is <strong>{result.lifePath}</strong>.</p>
-                      <p className="mt-2">Advice: {result.numerologyAdvice}</p>
-                    </div>
-
-                    <div className="p-4 rounded-md bg-white/4">
-                      <h5 className="font-semibold">Cultural Notes ({result.culture})</h5>
-                      <p className="mt-2">{result.culturalNote}</p>
-                    </div>
-
-                    <div className="flex gap-3 mt-3">
-                      <button onClick={exportJSON} className="py-2 px-4 rounded-lg bg-slate-700">Export JSON</button>
-                      <button onClick={printResult} className="py-2 px-4 rounded-lg bg-slate-700">Print</button>
-                      <button onClick={()=>{navigator.clipboard?.writeText(JSON.stringify(result, null, 2)); alert('Copied result to clipboard');}} className="py-2 px-4 rounded-lg border">Copy</button>
-                    </div>
-
-                  </div>
-                )}
-
-              </div>
-            </div>
-
-            <div className="mt-6 bg-white/3 p-6 rounded-xl">
-              <h3 className="text-lg font-semibold">How this app produces guidance</h3>
-              <ol className="list-decimal ml-5 mt-3 space-y-2 text-sm opacity-80">
-                <li>Sun Sign is calculated from month & day and gives a primary personality archetype.</li>
-                <li>Life Path numerology (from full birth date) provides a core life theme and vocational/wealth advice.</li>
-                <li>Advice blends modern practical steps with culturally-aware practices (e.g. elder networks, rotating savings, ancestral respect) — particularly tuned to Liberian/West African contexts when selected.</li>
-                <li>This app is intentionally local-first: it stores data locally and gives non-prescriptive, ethical suggestions. For detailed professional astrology (houses, aspects, transits), include exact birth time & coordinates or consult a professional astrologer.</li>
-              </ol>
-            </div>
-
-          </section>
-        </main>
-
-        <footer className="p-6 text-sm opacity-70 text-center">Made with care • Tailwind CSS • Local-only HD natal insights • Customize sign messaging in source</footer>
-      </div>
-    </div>
-  );
+  return "Unknown";
 }
+
+// Numerology life path calculation
+function getLifePath(year, month, day) {
+  const sumDigits = (num) => num.toString().split('').reduce((a,b)=>a+parseInt(b),0);
+  let total = sumDigits(year) + sumDigits(month) + sumDigits(day);
+  while (total > 9) total = sumDigits(total);
+  return total;
+}
+
+// African & Liberian spiritual interpretation
+function africanInsight(zodiac) {
+  const insights = {
+    "Capricorn": "Capricorn in African tradition symbolizes the Mountain Goat — one who climbs without fear. In Liberian wisdom, this represents a person who gains power through patience and endurance.",
+    "Aquarius": "Aquarius reflects the Water Carrier — a bringer of knowledge. In Liberian tradition, they carry 'wisdom water' for community upliftment.",
+    "Leo": "Leo aligns with the Lion — symbol of royal destiny and leadership in many West African lineages.",
+    // Expand others similarly
+  };
+  return insights[zodiac] || "Your African ancestral insight will guide you through strength, community, and destiny.";
+}
+
+// Detailed zodiac meanings
+const zodiacDetails = {
+  "Capricorn": {
+    traits: "Disciplined, strategic, ambitious, structured, resilient.",
+    meaning: "Capricorn represents mastery, structure, and long‑term success. You are a builder of legacy.",
+    power: "Strategic planning, discipline, leadership in resources.",
+    spiritual: "Mountain meditations, quiet reflection, honoring ancestors for strength.",
+  },
+  "Aquarius": {
+    traits: "Innovative, humanitarian, unique, intelligent, free‑minded.",
+    meaning: "Aquarius brings future‑thinking and transformation.",
+    power: "Creativity, community influence, technology mastery.",
+    spiritual: "Water rituals, cleansing, alignment with higher intuition.",
+  }
+  // Add all zodiac signs...
+};
+
+// GENERATE RESULTS
+const form = document.getElementById("natalForm");
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const month = parseInt(document.getElementById("month").value);
+  const day = parseInt(document.getElementById("day").value);
+  const year = parseInt(document.getElementById("year").value);
+
+  const zodiac = getZodiac(month, day);
+  const lifePath = getLifePath(year, month, day);
+  const african = africanInsight(zodiac);
+
+  // Render zodiac block
+  const zd = zodiacDetails[zodiac] || {};
+  document.getElementById("zodiacResult").innerHTML = `
+    <h3 class="text-2xl font-bold mb-2">Zodiac Sign: ${zodiac}</h3>
+    <p><strong>Traits:</strong> ${zd.traits || "N/A"}</p>
+    <p><strong>Meaning:</strong> ${zd.meaning || "N/A"}</p>
+    <p><strong>Power & Strength Areas:</strong> ${zd.power || "N/A"}</p>
+    <p><strong>Spiritual Wealth Focus:</strong> ${zd.spiritual || "N/A"}</p>
+  `;
+
+  // Numerology
+  document.getElementById("numerologyResult").innerHTML = `
+    <h3 class="text-2xl font-bold mb-2">Life Path Number: ${lifePath}</h3>
+    <p>This number reveals your destiny, personality, and spiritual alignment based on advanced numerology.</p>
+  `;
+
+  // African insight
+  document.getElementById("africanResult").innerHTML = `
+    <h3 class="text-2xl font-bold mb-2">African & Liberian Traditional Insight</h3>
+    <p>${african}</p>
+  `;
+
+  document.getElementById("results").classList.remove("hidden");
+});
+</script>
+</body>
+</html>
