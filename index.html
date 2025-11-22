@@ -112,6 +112,233 @@
 
         </div>
 
+        <!-- Mini ChatBot -->
+        <!-- -----------------------
+  Mini AI Chatbot (drop into your existing page)
+  - UI: Tailwind
+  - Local rule engine: compare/merge numerology numbers
+  - Optional OpenAI API fallback (paste key in the UI)
+------------------------ -->
+<div id="chatCard" class="bg-white/6 p-6 rounded-xl mt-6">
+  <div class="flex items-center justify-between">
+    <h3 class="font-semibold">Mini AI — Numerology & Spiritual Chatbot</h3>
+    <div class="text-sm opacity-80">Compare Life Paths, Soul/Expression numbers, get spiritual & practical steps.</div>
+  </div>
+
+  <div class="mt-4 grid grid-cols-1 lg:grid-cols-3 gap-4">
+    <div class="col-span-1 lg:col-span-2">
+      <div id="chatWindow" class="h-64 bg-slate-900/40 p-4 rounded-md overflow-auto"></div>
+
+      <form id="chatForm" class="mt-3 flex gap-2">
+        <input id="chatInput" class="flex-1 p-2 rounded-md bg-white/5" placeholder="Ask: e.g., Compare Life Path 8 vs 4 for career" />
+        <button class="py-2 px-4 rounded-md bg-amber-500 text-slate-900">Ask</button>
+      </form>
+
+      <div class="mt-2 text-xs opacity-70">
+        Tip: use prompts like "Compare Life Path 8 vs 4 for wealth" or "Combine 3,7,8 and give career options".
+      </div>
+    </div>
+
+    <div class="col-span-1">
+      <div class="p-3 bg-white/5 rounded-md">
+        <h4 class="font-semibold">Settings / Tools</h4>
+
+        <label class="block text-xs mt-2">Use external GPT (optional)</label>
+        <input id="apiKey" placeholder="Paste OpenAI API key (optional)" class="w-full p-2 rounded-md bg-white/10 text-sm" />
+
+        <label class="block text-xs mt-2">Response strategy</label>
+        <select id="respStrategy" class="w-full p-2 rounded-md bg-white/10 text-sm">
+          <option value="hybrid">Hybrid (local rules + API)</option>
+          <option value="local">Local rule-based (fast, private)</option>
+          <option value="api">API-only (requires key)</option>
+        </select>
+
+        <div class="mt-3">
+          <button id="clearChat" class="w-full py-2 rounded-md border">Clear Chat</button>
+        </div>
+      </div>
+
+      <div class="mt-3 p-3 bg-white/5 rounded-md text-sm">
+        <strong>Capabilities</strong>
+        <ul class="list-disc ml-4 mt-2">
+          <li>Compare numerology numbers (Life Path, Expression, Soul)</li>
+          <li>Suggest strengths, challenges, rituals, and a 90-day plan</li>
+          <li>Work privately (local) or use GPT for more creative answers</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- Mini-AI Chatbot logic (copy into your JS block) ---------- */
+
+/* Utilities: numerology helpers */
+const letterMap = {A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8};
+function reduceNumber(n){
+  while(n > 9 && n !== 11 && n !== 22 && n !== 33){
+    n = String(n).split('').reduce((a,b)=>a+Number(b),0);
+  }
+  return n;
+}
+function calcNameNumbers(fullName){
+  const letters = (fullName||'').toUpperCase().replace(/[^A-Z]/g,'');
+  let total=0, vowels=0, consonants=0;
+  const vs = new Set(['A','E','I','O','U']);
+  for(const ch of letters){
+    const val = letterMap[ch]||0;
+    total += val;
+    if(vs.has(ch)) vowels += val; else consonants += val;
+  }
+  return { expression: reduceNumber(total), soulUrge: reduceNumber(vowels), personality: reduceNumber(consonants) };
+}
+function lifePath(year,month,day){
+  const sum = (n) => String(n).split('').reduce((a,b)=>a+Number(b),0);
+  let total = sum(year) + sum(month) + sum(day);
+  return reduceNumber(total);
+}
+
+/* Definitions used by the local engine */
+const numberDefs = {
+  1:'Leader — independence, initiative.',
+  2:'Partnership — diplomacy, cooperation.',
+  3:'Creative — expression, communication.',
+  4:'Builder — systems, discipline.',
+  5:'Freedom — adaptability, commerce.',
+  6:'Caretaker — responsibility, community.',
+  7:'Seeker — study, spiritual depth.',
+  8:'Abundance — authority, material success.',
+  9:'Humanitarian — philanthropy, art.',
+  11:'Master visionary — intuition & service.',
+  22:'Master builder — systems & legacy.',
+  33:'Master teacher — teaching & healing.'
+};
+
+/* Rule-based comparison engines */
+function compareLifePaths(a,b){
+  const out = [];
+  out.push(`Life Path ${a}: ${numberDefs[a]||'Blend'}`);
+  out.push(`Life Path ${b}: ${numberDefs[b]||'Blend'}`);
+  if(a === b){
+    out.push('Aligned motivations — deepen shared strengths, formalize roles.');
+  } else {
+    if((a===8 && b===4) || (a===4 && b===8)) out.push('Strong pairing for wealth: 4 organizes, 8 scales. Build governance + clear ROI timelines.');
+    if((a===3 && b===7) || (a===7 && b===3)) out.push('3 (public) + 7 (depth) — blend teaching and creative output with research-backed authority.');
+    if((a===2 && b===6) || (a===6 && b===2)) out.push('2 & 6 favor family/business partnerships — structure agreements and responsibilities.');
+    out.push('Suggested next steps: set a 90-day plan, assign roles by strengths, combine cultural rituals for trust (elder blessings, rotating savings).');
+  }
+  return out.join('\\n');
+}
+function compareSoulNumbers(a,b){
+  const out = [];
+  out.push(`Soul ${a}: ${numberDefs[a]||''}`);
+  out.push(`Soul ${b}: ${numberDefs[b]||''}`);
+  if(a===b) out.push('Deep inner resonance — similar values and longings.');
+  else out.push('Differences can be complementary. Create rituals to honor each inner need and communicate expectations.');
+  return out.join('\\n');
+}
+function combineAttributes(nums){
+  const attributes = nums.map(n=>`${n}: ${numberDefs[n]||''}`).join('\\n');
+  const poss = [];
+  if(nums.includes(8)) poss.push('High material/leadership potential — ethical governance crucial.');
+  if(nums.includes(7)) poss.push('Inner study and retreats will deepen capacity & credibility.');
+  if(nums.includes(3)) poss.push('Public expression will amplify your reach. Create content systems.');
+  if(nums.includes(2)) poss.push('Partnership and cooperative channels will help scale trust.');
+  return {attributes, possibilities: poss.join('\\n')};
+}
+
+/* Mini-AI orchestration:
+   - local rule detection for patterns (fast + private)
+   - optional API fallback (OpenAI) when user selects and provides key
+*/
+async function generateAnswer(prompt, strategy='hybrid', apiKey=''){
+  const lower = prompt.toLowerCase();
+  const compareLP = lower.match(/life\\s*path\\s*(\\d{1,2})\\s*(vs|and|v)\\s*(\\d{1,2})/i);
+  const compareSoul = lower.match(/soul\\s*(?:urge|number)?\\s*(\\d{1,2})\\s*(vs|and|v)\\s*(\\d{1,2})/i);
+  const combineNums = lower.match(/combine(?:\\s+numbers)?\\s*([\\d,\\s]+)/i);
+
+  if(compareLP){ const a=Number(compareLP[1]), b=Number(compareLP[3]); return { source:'local', text: compareLifePaths(a,b) }; }
+  if(compareSoul){ const a=Number(compareSoul[1]), b=Number(compareSoul[3]); return { source:'local', text: compareSoulNumbers(a,b) }; }
+  if(combineNums){ const nums = combineNums[1].split(/[,\\s]+/).map(x=>Number(x)).filter(Boolean); const c = combineAttributes(nums); return { source:'local', text: `Attributes:\\n${c.attributes}\\n\\nPossibilities:\\n${c.possibilities}` }; }
+
+  // If nothing matched and API usage allowed, call external GPT
+  if((strategy==='api' || strategy==='hybrid') && apiKey){
+    try{
+      // NOTE: this uses OpenAI REST endpoint; update model per your account.
+      const system = `You are an expert numerology and spiritual guidance assistant. Provide clear comparisons between numbers (Life Path, Expression, Soul), give strengths, challenges, culturally-aware suggestions (when asked about Africa/Liberia) and 3 practical action steps.`;
+      const body = { model:'gpt-4o-mini', messages:[{role:'system',content:system},{role:'user',content:prompt}], max_tokens:700 };
+      const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json','Authorization':'Bearer '+apiKey },
+        body: JSON.stringify(body)
+      });
+      if(!resp.ok){
+        return { source:'api', text: `API error ${resp.status} ${resp.statusText}` };
+      }
+      const j = await resp.json();
+      const text = j.choices?.[0]?.message?.content || j.choices?.[0]?.text || JSON.stringify(j);
+      return { source:'api', text };
+    }catch(err){
+      return { source:'error', text: 'API call failed: ' + err.message };
+    }
+  }
+
+  // Default fallback guidance
+  return { source:'local', text: [
+    'I can compare Life Paths, Soul/Expression numbers, or combine numbers.',
+    'Examples:',
+    '- "Compare Life Path 8 vs 4 for business"',
+    '- "Combine 3,7,8 and suggest career paths"',
+    'Tip: for creative, in-depth answers, paste an OpenAI API key and set strategy to Hybrid or API-only.'
+  ].join('\\n')};
+}
+
+/* Chat UI wiring */
+const chatWindow = document.getElementById('chatWindow');
+function appendMessage(role, text){
+  const wrapper = document.createElement('div');
+  wrapper.className = 'mb-3';
+  const bubble = document.createElement('div');
+  bubble.className = `chat-bubble p-3 rounded-lg ${role==='user' ? 'bg-amber-500 text-slate-900 ml-auto' : 'bg-white/5 text-left'}`;
+  // Preserve newlines
+  text.split('\\n').forEach((line,i)=>{
+    if(i>0) bubble.appendChild(document.createElement('br'));
+    bubble.appendChild(document.createTextNode(line));
+  });
+  wrapper.appendChild(bubble);
+  chatWindow.appendChild(wrapper);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+
+document.getElementById('chatForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const q = document.getElementById('chatInput').value.trim();
+  if(!q) return;
+  appendMessage('user', q);
+  document.getElementById('chatInput').value = '';
+  appendMessage('assistant', 'Thinking...');
+  const strategy = document.getElementById('respStrategy').value;
+  const key = document.getElementById('apiKey').value.trim();
+
+  const ans = await generateAnswer(q, strategy, key);
+  // remove last 'Thinking...' assistant bubble
+  const lastChild = chatWindow.lastChild;
+  if(lastChild && lastChild.querySelector && lastChild.querySelector('div') && lastChild.textContent.trim()==='Thinking...') chatWindow.removeChild(lastChild);
+  appendMessage('assistant', ans.text + `\\n\\n(Source: ${ans.source})`);
+});
+
+document.getElementById('clearChat').addEventListener('click', ()=>{ chatWindow.innerHTML=''; });
+
+/* Security & Notes:
+ - If you paste your OpenAI key here, keep it private. This demo uses the user's key clientside (not recommended for production).
+ - For production, proxy requests through your server to hide API keys & enforce quotas.
+*/
+
+/* Optional helper: Hook chatbot to the last-generated profile (quick compare).
+   Example: "Compare Life Path 8 vs [last result]" button could be added later.
+*/
+</script>
+
         <!-- Activity history -->
         <div id="activityCard" class="bg-white/6 p-6 rounded-xl">
           <div class="flex items-center justify-between">
