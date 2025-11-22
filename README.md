@@ -1,4 +1,6 @@
 # tlnatalchart
+# Author: Msg. Prof. Hudson SIAH Kattieh Bsc, Msc3, IDL
+# Organizations: TechLift Liberia through Light Of Both Paths initiatives
 TL Natal Chart is a web based numerology & natal profile tool. You input your birth data (date, name, etc.) and it generates several numerological readings:
 •	Sun Sign, Life Path Number, Expression Number (based on your name)
 •	Soul Urge Number (vowels in your name) and Personality Number (consonants)
