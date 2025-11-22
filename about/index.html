@@ -1,1 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TL Natal Chart – Splash Screen</title>
 
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: black;
+        overflow: hidden;
+        font-family: "Poppins", sans-serif;
+        color: white;
+    }
+
+    /* Starfield Background */
+    .stars {
+        width: 2px;
+        height: 2px;
+        background: white;
+        position: absolute;
+        animation: starMove 6s linear infinite;
+        opacity: 0.4;
+    }
+
+    @keyframes starMove {
+        from { transform: translateY(0); }
+        to { transform: translateY(100vh); }
+    }
+
+    /* Center container */
+    .splash-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        width: 90%;
+    }
+
+    .text {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+        opacity: 0;
+        animation: fadeIn 2.5s forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Logo Reveal */
+    .logo {
+        font-size: 3rem;
+        margin-top: 40px;
+        opacity: 0;
+        animation: logoReveal 3s forwards;
+        animation-delay: 9s;
+        font-weight: 900;
+        background: linear-gradient(45deg, #c49bff, #ffd57e);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    @keyframes logoReveal {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .final-tag {
+        font-size: 1.2rem;
+        margin-top: 10px;
+        opacity: 0;
+        animation: fadeIn 2s forwards;
+        animation-delay: 12s;
+        letter-spacing: 1px;
+    }
+
+    /* Fade Out Screen */
+    .fade-out {
+        animation: fadeOutScreen 2s forwards;
+    }
+
+    @keyframes fadeOutScreen {
+        to { opacity: 0; }
+    }
+</style>
+</head>
+
+<body>
+
+<!-- Dynamic Stars -->
+<script>
+    for (let i = 0; i < 100; i++) {
+        let star = document.createElement("div");
+        star.classList.add("stars");
+        star.style.top = Math.random() * -200 + "px";
+        star.style.left = Math.random() * window.innerWidth + "px";
+        star.style.animationDuration = (Math.random() * 5 + 3) + "s";
+        document.body.appendChild(star);
+    }
+</script>
+
+<div class="splash-container">
+    <div class="text" style="animation-delay: 0.5s;">Before you were born…</div>
+    <div class="text" style="animation-delay: 2.5s;">…the universe prepared your arrival.</div>
+    <div class="text" style="animation-delay: 4.5s;">Every star. Every planet. Every vibration.</div>
+    <div class="text" style="animation-delay: 6.5s;">All aligned with intention.</div>
+
+    <div class="logo">TL NATAL CHART</div>
+
+    <div class="final-tag">Decode Your Purpose • Master Your Destiny</div>
+</div>
+
+<script>
+    // Auto-fade and redirect after the intro
+    setTimeout(() => {
+        document.body.classList.add("fade-out");
+        setTimeout(() => {
+            window.location.href = "home.html"; 
+            // Change to your real app homepage
+        }, 2000);
+    }, 15000); // Total animation time
+</script>
+
+</body>
+</html>
