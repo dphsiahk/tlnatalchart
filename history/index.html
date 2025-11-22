@@ -1,1 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TL Natal Chart — Deep History (HD)</title>
+  <meta name="description" content="Deep, advanced history of the natal chart with African traditions — TL Natal Chart" />
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom starfield and subtle animations */
+    .starfield {
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.9) 40%), linear-gradient(180deg, rgba(2,6,23,1) 0%, rgba(0,0,0,1) 100%);
+      position: absolute; inset: 0; z-index: -10; overflow: hidden;
+    }
+    .star {
+      position: absolute; width: 2px; height: 2px; background: rgba(255,255,255,0.9); border-radius: 9999px; opacity: 0.9; transform: translateY(0); animation: fall var(--dur) linear infinite;
+    }
+    @keyframes fall {
+      from { transform: translateY(-10vh) translateX(0) scale(0.8); opacity: 0.9; }
+      to { transform: translateY(110vh) translateX(var(--drift)) scale(0.6); opacity: 0.15; }
+    }
+    .glow { text-shadow: 0 8px 30px rgba(196,155,255,0.18); }
+    /* Smooth reveal */
+    .reveal { transform: translateY(10px); opacity: 0; transition: all .9s cubic-bezier(.2,.9,.3,1); }
+    .reveal.show { transform: translateY(0); opacity: 1; }
+    /* Dropdown caret animation */
+    .rotate-90 { transform: rotate(90deg); }
+    /* timeline marker */
+    .timeline::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg,#FFD57E,#C49BFF); }
+  </style>
+</head>
+<body class="antialiased bg-black text-slate-100">
+  <div class="starfield" aria-hidden="true"></div>
 
+  <!-- Navigation -->
+  <header class="w-full fixed top-4 left-0 z-40 px-6 md:px-12">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      <a href="#" class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-[#6b21a8] to-[#f59e0b] flex items-center justify-center shadow-2xl">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" class="text-black"><path d="M12 2v20M2 12h20" stroke="rgba(0,0,0,0.9)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="hidden md:block">
+          <div class="text-sm font-semibold">TL NATAL CHART</div>
+          <div class="text-xs text-slate-300">Decode your purpose • Master your destiny</div>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6">
+        <div class="relative" x-data="{}">
+          <button class="group inline-flex items-center gap-2 px-3 py-2 rounded-md hover:bg-white/5 transition" id="menuAbout">
+            <span>About</span>
+            <svg id="caretAbout" class="w-3 h-3 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M6 8l4 4 4-4"/></svg>
+          </button>
+          <!-- Dropdown -->
+          <div id="dropdownAbout" class="absolute right-0 mt-2 w-64 bg-slate-900/80 backdrop-blur rounded-xl border border-slate-800 p-4 shadow-lg hidden">
+            <a href="#history" class="block px-2 py-2 rounded hover:bg-white/3">Deep History</a>
+            <a href="#african" class="block px-2 py-2 rounded hover:bg-white/3">African Traditions</a>
+            <a href="#modern" class="block px-2 py-2 rounded hover:bg-white/3">Modern Evolution</a>
+          </div>
+        </div>
+
+        <div class="relative">
+          <button class="group inline-flex items-center gap-2 px-3 py-2 rounded-md hover:bg-white/5 transition" id="menuExplore">
+            <span>Explore</span>
+            <svg id="caretExplore" class="w-3 h-3 transition-transform" viewBox="0 0 20 20" fill="currentColor"><path d="M6 8l4 4 4-4"/></svg>
+          </button>
+          <div id="dropdownExplore" class="absolute right-0 mt-2 w-80 bg-slate-900/80 backdrop-blur rounded-xl border border-slate-800 p-4 shadow-lg hidden">
+            <div class="grid grid-cols-2 gap-3">
+              <a href="#traditions" class="block p-3 rounded hover:bg-white/5">Traditions</a>
+              <a href="#timeline" class="block p-3 rounded hover:bg-white/5">Timeline</a>
+              <a href="#method" class="block p-3 rounded hover:bg-white/5">Method</a>
+              <a href="#integration" class="block p-3 rounded hover:bg-white/5">Integration</a>
+            </div>
+          </div>
+        </div>
+
+        <a href="#contact" class="px-3 py-2 rounded-md hover:bg-white/5 transition">Contact</a>
+        <a href="#" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-gradient-to-br from-[#6b21a8] to-[#f59e0b] text-black font-semibold">Get Started</a>
+      </nav>
+
+      <!-- Mobile menu button -->
+      <button id="btnMobile" class="md:hidden p-2 rounded-md bg-white/5">
+        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile nav panel -->
+    <div id="mobilePanel" class="mt-4 hidden md:hidden">
+      <div class="bg-slate-900/70 rounded-xl p-4 border border-slate-800">
+        <a href="#history" class="block py-2">Deep History</a>
+        <a href="#african" class="block py-2">African Traditions</a>
+        <a href="#timeline" class="block py-2">Timeline</a>
+        <a href="#contact" class="block py-2">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <main class="pt-28">
+    <section class="relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 flex flex-col md:flex-row items-center gap-12">
+        <div class="w-full md:w-6/12">
+          <h1 class="text-4xl md:text-5xl font-extrabold leading-tight glow">The Ancestral Map of Destiny</h1>
+          <p class="mt-4 text-lg text-slate-300">A deep, multi-cosmic history of the natal chart integrating African cosmology, Egyptian decans, Babylonian structure, Vedic timing, and modern psychological insight.</p>
+
+          <div class="mt-8 flex items-center gap-4">
+            <a href="#history" class="px-5 py-3 rounded-lg bg-gradient-to-br from-[#6b21a8] to-[#f59e0b] text-black font-semibold shadow-lg">Explore the History</a>
+            <a href="#integration" class="px-5 py-3 rounded-lg border border-slate-700 hover:bg-white/5">How TL Integrates</a>
+          </div>
+
+          <div class="mt-8 grid grid-cols-2 gap-3 text-sm text-slate-400">
+            <div class="p-3 border border-slate-800 rounded-lg">Soul Identity</div>
+            <div class="p-3 border border-slate-800 rounded-lg">Ancestral Signatures</div>
+            <div class="p-3 border border-slate-800 rounded-lg">Karmic Timing</div>
+            <div class="p-3 border border-slate-800 rounded-lg">Power Centers</div>
+          </div>
+        </div>
+
+        <div class="w-full md:w-6/12 relative">
+          <!-- Animated zodiac wheel SVG (stylized) -->
+          <div class="mx-auto w-[340px] h-[340px] md:w-[420px] md:h-[420px] rounded-full bg-gradient-to-br from-slate-900/60 via-transparent to-transparent border border-slate-800 p-6 flex items-center justify-center shadow-2xl">
+            <div class="w-full h-full rounded-full flex items-center justify-center">
+              <div class="text-center">
+                <div class="text-sm text-slate-400">Multi-Cosmic Model</div>
+                <div class="mt-3 text-3xl font-extrabold">TL</div>
+                <div class="mt-1 text-slate-300">Natal Chart</div>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 text-xs text-slate-500 text-center">Ancient wisdom • Mathematical precision • Modern psychology</div>
+        </div>
+      </div>
+
+      <!-- decorative SVG line -->
+      <svg class="absolute right-0 bottom-0 opacity-10 w-80 h-80" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#C49BFF"/><stop offset="1" stop-color="#FFD57E"/></linearGradient></defs>
+        <circle cx="100" cy="100" r="80" stroke="url(#g)" stroke-width="1" fill="none"/></svg>
+    </section>
+
+    <!-- Content Sections -->
+    <section id="history" class="max-w-6xl mx-auto px-6 md:px-12 mt-16">
+      <div class="bg-gradient-to-bl from-slate-900/60 to-black rounded-2xl border border-slate-800 p-8 shadow-xl">
+        <h2 class="text-2xl font-bold">The Deep Advanced History</h2>
+        <p class="mt-3 text-slate-300">TL Natal Chart Edition: The Ancestral Map of Destiny, Purpose &amp; Cosmic Intelligence.</p>
+
+        <!-- Timeline -->
+        <div class="relative mt-8 pl-12">
+          <div class="timeline relative">
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-gradient-to-br from-[#6b21a8] to-[#f59e0b] flex items-center justify-center text-black font-bold">AF</div>
+              <h3 class="text-lg font-semibold">African Cosmology — The First Destiny Systems (Pre-2000 BCE)</h3>
+              <p class="mt-2 text-slate-300">Before Babylon and Greece, Africa held early star-lore linking birth with cosmic identity. Dogon, Yoruba, Akan, Zulu and other traditions developed systems that read birth as a spiritual arrival.</p>
+            </div>
+
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center text-white font-bold">BA</div>
+              <h3 class="text-lg font-semibold">Babylon — The First Structured Astrology (2000–500 BCE)</h3>
+              <p class="mt-2 text-slate-300">Babylon introduced organized planetary observation and early horoscopes for rulers. Their system provided the structural backbone for later Western astrology.</p>
+            </div>
+
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-[#b77bff] flex items-center justify-center text-black font-bold">EG</div>
+              <h3 class="text-lg font-semibold">Ancient Egypt (Kemet) — Decans & Spiritual Identities</h3>
+              <p class="mt-2 text-slate-300">Egypt combined African spirituality with mathematical astronomy — introducing decans and linking birth to divine archetypes and soul missions.</p>
+            </div>
+
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-[#60a5fa] flex items-center justify-center text-black font-bold">GR</div>
+              <h3 class="text-lg font-semibold">Hellenistic Greece — The 12-House & Zodiac Formation (300 BCE)</h3>
+              <p class="mt-2 text-slate-300">Greek scholars in Alexandria synthesized Babylonian and Egyptian systems, formalizing the 12 signs and houses used in Western natal charts.</p>
+            </div>
+
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-[#f97316] flex items-center justify-center text-black font-bold">IN</div>
+              <h3 class="text-lg font-semibold">India (Vedic / Jyotish) — Karma & Soul Timing</h3>
+              <p class="mt-2 text-slate-300">Vedic astrology offers precision through the sidereal zodiac and dashas, revealing karma, life chapters, and past-life signatures.</p>
+            </div>
+
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-[#ef4444] flex items-center justify-center text-black font-bold">IS</div>
+              <h3 class="text-lg font-semibold">Islamic Golden Age — Preservation & Refinement</h3>
+              <p class="mt-2 text-slate-300">Arab and Persian scholars preserved and refined classical astrological knowledge and improved planetary calculations used across continents.</p>
+            </div>
+
+            <div class="mb-12 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-[#10b981] flex items-center justify-center text-black font-bold">RE</div>
+              <h3 class="text-lg font-semibold">African Resurgence — Continuity of Destiny Systems</h3>
+              <p class="mt-2 text-slate-300">African traditions persisted and evolved across centuries, maintaining spiritual birth-readings and ancestral cosmologies.</p>
+            </div>
+
+            <div class="mb-6 relative">
+              <div class="absolute left-[-36px] top-0 w-12 h-12 rounded-full bg-[#8b5cf6] flex items-center justify-center text-black font-bold">MO</div>
+              <h3 class="text-lg font-semibold">Modern Era — Psychology, Spirituality & Data Astrology</h3>
+              <p class="mt-2 text-slate-300">20th-century thinkers added psychological depth. Modern tech provides precise calculations and AI-assisted synthesis of traditions. TL Natal Chart stands on this modern evolution.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Additional sections -->
+    <section id="african" class="max-w-6xl mx-auto px-6 md:px-12 mt-10">
+      <div class="bg-slate-900/60 rounded-2xl border border-slate-800 p-8 shadow-xl">
+        <h3 class="text-xl font-bold">African Traditions — Expanded</h3>
+        <div class="mt-4 grid md:grid-cols-2 gap-6 text-slate-300">
+          <div>
+            <h4 class="font-semibold">Dogon — Star Origins</h4>
+            <p class="mt-2">Advanced Sirius knowledge and the concept of star-seeds. Births were read as arrival signatures connected to ancestral stars.</p>
+
+            <h4 class="mt-4 font-semibold">Yoruba — Ori & Ifá</h4>
+            <p class="mt-2">Ifá divination complements birth readings, connecting planetary timing to personal destiny and spiritual gifts.</p>
+          </div>
+
+          <div>
+            <h4 class="font-semibold">Akan — Kra & Ntoro</h4>
+            <p class="mt-2">Soul and paternal energies combine to form a destiny pattern read at birth and through life stages.</p>
+
+            <h4 class="mt-4 font-semibold">Zulu, Bantu & Nilotic Practices</h4>
+            <p class="mt-2">Seasonal star gates and lunar cycles used to determine temperament, prophetic gifts, and social roles.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="integration" class="max-w-6xl mx-auto px-6 md:px-12 mt-10">
+      <div class="bg-gradient-to-bl from-slate-900/60 to-black rounded-2xl border border-slate-800 p-8 shadow-xl">
+        <h3 class="text-xl font-bold">How TL Natal Chart Integrates These Systems</h3>
+        <ol class="mt-4 list-decimal list-inside text-slate-300 space-y-3">
+          <li><strong>Source Layering:</strong> African spiritual signals layered under Western house geometry.</li>
+          <li><strong>Timing Fusion:</strong> Sidereal dashas combined with decan timing for precise life chapters.</li>
+          <li><strong>Ancestral Signatures:</strong> Incorporates lineage markers (where available) into interpretation tokens.</li>
+          <li><strong>Psych-Spiritual Mapping:</strong> Psychological archetypes + karmic lessons provide actionable guidance.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="modern" class="max-w-6xl mx-auto px-6 md:px-12 mt-10 mb-28">
+      <div class="bg-slate-900/60 rounded-2xl border border-slate-800 p-8 shadow-xl">
+        <h3 class="text-xl font-bold">Modern Tools & Accuracy</h3>
+        <p class="mt-3 text-slate-300">TL Natal Chart uses precise astronomical ephemerides, AI-enhanced synthesis across traditions, and human-curated interpretive layers to produce a chart that is accurate, culturally aware, and spiritually rich.</p>
+
+        <div class="mt-6 grid md:grid-cols-3 gap-4 text-sm text-slate-400">
+          <div class="p-4 border border-slate-800 rounded-lg">High-precision ephemeris</div>
+          <div class="p-4 border border-slate-800 rounded-lg">Tradition-aware AI models</div>
+          <div class="p-4 border border-slate-800 rounded-lg">Human-curated narratives</div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="mt-12 pb-12">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 text-center text-slate-400 text-sm">
+      © TL Natal Chart • Ancestral Wisdom • Modern Precision
+    </div>
+  </footer>
+
+  <!-- Scripts: star generation + dropdowns + reveal on scroll -->
+  <script>
+    // generate stars
+    const starfield = document.querySelector('.starfield');
+    for (let i = 0; i < 120; i++) {
+      const s = document.createElement('div');
+      s.classList.add('star');
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--dur', (Math.random() * 8 + 6).toFixed(2) + 's');
+      s.style.setProperty('--drift', (Math.random() * 200 - 100) + 'px');
+      s.style.opacity = (Math.random() * 0.8 + 0.2).toFixed(2);
+      starfield.appendChild(s);
+    }
+
+    // dropdown toggles
+    function toggle(idBtn, idPanel, idCaret) {
+      const btn = document.getElementById(idBtn);
+      const panel = document.getElementById(idPanel);
+      const caret = document.getElementById(idCaret);
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        panel.classList.toggle('hidden');
+        caret.classList.toggle('rotate-90');
+      });
+      document.addEventListener('click', () => { panel.classList.add('hidden'); caret.classList.remove('rotate-90'); });
+      panel.addEventListener('click', (e) => e.stopPropagation());
+    }
+    toggle('menuAbout','dropdownAbout','caretAbout');
+    toggle('menuExplore','dropdownExplore','caretExplore');
+
+    // mobile menu
+    const btnMobile = document.getElementById('btnMobile');
+    const mobilePanel = document.getElementById('mobilePanel');
+    btnMobile.addEventListener('click', () => mobilePanel.classList.toggle('hidden'));
+
+    // reveal on scroll
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+    }, {threshold: 0.12});
+    reveals.forEach(r => observer.observe(r));
+
+    // smooth internal links
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', function(e){
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) { e.preventDefault(); target.scrollIntoView({behavior:'smooth', block:'start'}); }
+      });
+    });
+  </script>
+</body>
+</html>
