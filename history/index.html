@@ -3,50 +3,47 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>TL Natal Chart — The Ancestral Map (Animated History)</title>
-  <meta name="description" content="Animated, full-HD one-page presentation of the TL Natal Chart History using Tailwind CSS." />
+  <title>TL Natal Chart — Ancestral Map (Animated History)</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
   <style>
-    :root{--accent:#a78bfa;--accent-2:#60a5fa;--glass:rgba(255,255,255,0.06)}
-    html,body,#app{height:100%}
-    body{font-family:'Poppins',system-ui, -apple-system, "Segoe UI", Roboto, 'Helvetica Neue', Arial;}
+    :root {
+      --accent: #a78bfa;
+      --accent-2: #60a5fa;
+      --glass: rgba(255,255,255,0.06);
+    }
+    html, body, #app { height: 100%; }
+    body { font-family: 'Poppins', system-ui, sans-serif; }
 
-    /* starfield */
-    .stars{background: radial-gradient(ellipse at center, rgba(255,255,255,0.12) 0, rgba(255,255,255,0.02) 2px, transparent 40%), transparent; background-size: 3px 3px;}
-    .twinkle{animation: twinkle 6s linear infinite;}
-    @keyframes twinkle{0%{opacity:.3}50%{opacity:1}100%{opacity:.3}}
+    .stars { background: radial-gradient(ellipse at center,
+      rgba(255,255,255,0.12) 0, rgba(255,255,255,0.02) 2px, transparent 40%),
+      transparent; background-size: 3px 3px; }
+    .twinkle { animation: twinkle 6s linear infinite; }
+    @keyframes twinkle { 0% { opacity: .3 } 50% { opacity: 1 } 100% { opacity: .3 } }
 
-    /* floating card */
-    .floaty{transform-style:preserve-3d; animation: floaty 8s ease-in-out infinite}
-    @keyframes floaty{0%{transform:translateY(0) rotateX(0) rotateY(0)}50%{transform:translateY(-8px) rotateX(2deg) rotateY(2deg)}100%{transform:translateY(0) rotateX(0) rotateY(0)}}
+    .floaty { transform-style: preserve-3d; animation: floaty 8s ease-in-out infinite; }
+    @keyframes floaty { 0% { transform: translateY(0) } 50% { transform: translateY(-8px) } 100% { transform: translateY(0) } }
 
-    /* timeline line draw */
-    .timeline-line{height:4px; background:linear-gradient(90deg,var(--accent), var(--accent-2)); border-radius:9999px; transform-origin:left; animation:draw 1.6s ease forwards}
-    @keyframes draw{0%{transform:scaleX(0)}100%{transform:scaleX(1)}}
+    .timeline-line { height: 4px; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 9999px; transform-origin: left; animation: draw 1.6s ease forwards; }
+    @keyframes draw { 0% { transform: scaleX(0) } 100% { transform: scaleX(1) } }
 
-    /* era card entrance */
-    .enter-up{transform:translateY(20px); opacity:0; animation:enterUp .9s ease forwards}
-    @keyframes enterUp{to{transform:none;opacity:1}}
+    .enter-up { transform: translateY(20px); opacity: 0; animation: enterUp .9s ease forwards; }
+    @keyframes enterUp { to { transform: none; opacity: 1 } }
 
-    /* subtle glass blur */
-    .glass{background:linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,0.04)}
+    .glass { background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02)); backdrop-filter: blur(6px); border:1px solid rgba(255,255,255,0.04); }
 
-    /* responsive scaling for full HD presentation */
-    @media (min-width:1280px){.presentation{max-width:1600px}}
+    @media (min-width: 1280px) { .presentation { max-width: 1600px } }
   </style>
 </head>
 <body class="bg-gradient-to-b from-slate-900 via-indigo-900 to-black text-slate-100 antialiased">
   <div id="app" class="min-h-screen flex items-center justify-center p-8 presentation mx-auto">
     <div class="w-full max-w-screen-xl relative">
 
-      <!-- Starfield background layers for parallax -->
+      <!-- starfield -->
       <div id="starLayer1" class="absolute inset-0 pointer-events-none opacity-30"></div>
       <div id="starLayer2" class="absolute inset-0 pointer-events-none opacity-20"></div>
 
-      <!-- Header / Hero -->
+      <!-- Hero / Header -->
       <header class="relative z-10 py-12">
         <div class="glass rounded-3xl p-8 drop-shadow-2xl floaty">
           <div class="flex items-center gap-6">
@@ -55,12 +52,12 @@
             </div>
             <div>
               <h1 class="text-3xl xl:text-4xl font-extrabold">TL Natal Chart — <span class="text-indigo-300">The Ancestral Map</span></h1>
-              <p class="mt-2 text-slate-300 max-w-2xl">History, integration and the deep roots of destiny systems — illustrated as a living timeline connecting ancestral cosmologies to modern psych-spiritual mapping.</p>
+              <p class="mt-2 text-slate-300 max-w-2xl">History, integration and the deep roots of destiny systems — illustrated as a living timeline linking ancestral cosmologies to modern psych-spiritual mapping.</p>
             </div>
             <div class="ml-auto text-right">
               <div class="text-sm text-slate-400">Full-HD Animated Presentation</div>
               <div class="mt-2 inline-flex items-center gap-3 bg-slate-800/30 px-3 py-1 rounded-full text-xs glass">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3" /></svg>
                 Animated • Interactive • HD
               </div>
             </div>
@@ -68,163 +65,180 @@
         </div>
       </header>
 
-      <!-- Timeline section -->
+      <!-- Timeline -->
       <main class="relative z-10 mt-10">
         <section class="glass rounded-3xl p-8">
           <div class="flex flex-col lg:flex-row gap-8">
-            <!-- left: big visual summary -->
+            <!-- Left: visual orb -->
             <div class="lg:w-1/2">
               <div class="relative h-96 rounded-2xl overflow-hidden border border-white/5">
                 <canvas id="orb" class="absolute inset-0 w-full h-full"></canvas>
                 <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div class="text-center">
                     <div class="text-4xl xl:text-5xl font-extrabold tracking-tight">Ancestral<br/><span class="text-gradient">Map of Destiny</span></div>
-                    <p class="mt-4 text-slate-300 max-w-xl mx-auto">From African star-lore to Vedic timing and modern psych-spiritual mapping — TL Natal Chart weaves an integrated story of timing, lineage and soul-purpose.</p>
+                    <p class="mt-4 text-slate-300 max-w-xl mx-auto">From African star-lore to Vedic timing and modern psych-spiritual mapping — TL Natal Chart weaves a story of timing, lineage, and soul-purpose.</p>
                     <div class="mt-6 inline-flex gap-3">
                       <button id="playBtn" class="px-5 py-2 rounded-full glass hover:scale-105 transition-transform">Play Flow</button>
                       <button id="pauseBtn" class="px-5 py-2 rounded-full bg-indigo-600/20 hover:bg-indigo-600/40 transition">Pause</button>
                     </div>
                   </div>
                 </div>
-                <!-- subtle stars -->
                 <div class="absolute inset-0 pointer-events-none stars"></div>
               </div>
             </div>
 
-            <!-- right: timeline list -->
+            <!-- Right: timeline list with images -->
             <div class="lg:w-1/2 flex flex-col gap-6">
-
               <div class="flex items-center gap-4">
-                <div class="w-2/3 timeline-line" style="animation-delay:.2s"></div>
-                <div class="text-xs text-slate-400">A condensed timeline connecting eras & systems</div>
+                <div class="w-2/3 timeline_line timeline-line" style="animation-delay:.2s"></div>
+                <div class="text-xs text-slate-400">Timeline of eras & systems</div>
               </div>
 
-              <!-- Era item template -->
-              <div class="space-y-4">
-
-                <!-- AF -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.25s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center font-bold text-black">AF</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">African Cosmology — The First Destiny Systems (Pre-2000 BCE)</h3>
-                      <p class="mt-2 text-slate-300">Before Babylon and Greece, African traditions (Dogon, Yoruba, Akan, Zulu) read birth as a spiritual arrival — star-lore linking birth with cosmic identity.</p>
-                    </div>
+              <!-- Era Cards -->
+              <!-- AF: African Cosmology -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.25s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/vectors/astronomy-constellations-sky-stars-7509918/" alt="African cosmology stars" class="object-cover w-full h-full opacity-40">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center font-bold text-black">AF</div>
                   </div>
-                </article>
-
-                <!-- BA -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.35s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center font-bold text-black">BA</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">Babylon — The First Structured Astrology (2000–500 BCE)</h3>
-                      <p class="mt-2 text-slate-300">Organized planetary observation and early horoscopes for rulers—provided the structural backbone for later Western astrology.</p>
-                    </div>
+                  <div>
+                    <h3 class="font-bold text-xl">African Cosmology — The First Destiny Systems (Pre-2000 BCE)</h3>
+                    <p class="mt-2 text-slate-300">Before Babylon and Greece, African traditions (Dogon, Yoruba, Akan, Zulu) read birth as a spiritual arrival — star-lore linking birth with cosmic identity.</p>
                   </div>
-                </article>
+                </div>
+              </article>
 
-                <!-- EG -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.45s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center font-bold text-black">EG</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">Ancient Egypt (Kemet) — Decans & Spiritual Identities</h3>
-                      <p class="mt-2 text-slate-300">Egypt introduced decans and linked birth to divine archetypes and soul missions through mathematical astronomy.</p>
-                    </div>
+              <!-- BA: Babylon -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.35s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/illustrations/abstract-astrology-astronomy-aurora-7192989/" alt="Babylon astronomy abstract" class="object-cover w-full h-full opacity-40">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-400 to-rose-500 flex items-center justify-center font-bold text-black">BA</div>
                   </div>
-                </article>
-
-                <!-- GR -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.55s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center font-bold text-black">GR</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">Hellenistic Greece — The 12-House & Zodiac Formation (300 BCE)</h3>
-                      <p class="mt-2 text-slate-300">Greek synthesis in Alexandria formalized the 12 signs and houses used in Western natal charts.</p>
-                    </div>
+                  <div>
+                    <h3 class="font-bold text-xl">Babylon — The First Structured Astrology (2000–500 BCE)</h3>
+                    <p class="mt-2 text-slate-300">Organized planetary observation and early horoscopes for rulers — groundwork for Western astrology.</p>
                   </div>
-                </article>
+                </div>
+              </article>
 
-                <!-- IN -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.65s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center font-bold text-black">IN</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">India (Vedic / Jyotish) — Karma & Soul Timing</h3>
-                      <p class="mt-2 text-slate-300">Vedic astrology uses the sidereal zodiac and dashas to reveal karma, life chapters, and past-life signatures.</p>
-                    </div>
+              <!-- EG: Ancient Egypt -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.45s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Ancient_Egypt_Zodiac_of_Dendera_%2828306172802%29.jpg" alt="Dendera Zodiac" class="object-cover w-full h-full opacity-40">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-400 to-violet-500 flex items-center justify-center font-bold text-black">EG</div>
                   </div>
-                </article>
-
-                <!-- IS -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.75s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-fuchsia-400 to-pink-500 flex items-center justify-center font-bold text-black">IS</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">Islamic Golden Age — Preservation & Refinement</h3>
-                      <p class="mt-2 text-slate-300">Arab and Persian scholars preserved classical knowledge and improved planetary calculations used across continents.</p>
-                    </div>
+                  <div>
+                    <h3 class="font-bold text-xl">Ancient Egypt (Kemet) — Decans & Spiritual Identities</h3>
+                    <p class="mt-2 text-slate-300">Egypt introduced decans and linked birth to divine archetypes and soul missions through mathematical astronomy.</p>
                   </div>
-                </article>
+                </div>
+              </article>
 
-                <!-- RE -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.85s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-300 to-lime-400 flex items-center justify-center font-bold text-black">RE</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">African Resurgence — Continuity of Destiny Systems</h3>
-                      <p class="mt-2 text-slate-300">African traditions persisted and evolved, maintaining spiritual birth-readings and ancestral cosmologies.</p>
-                    </div>
+              <!-- GR: Hellenistic Greece -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.55s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/vectors/astronomy-zodiac-astrology-line-art-7337040/" alt="Greek astrology vector" class="object-cover w-full h-full opacity-30">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-sky-400 to-cyan-500 flex items-center justify-center font-bold text-black">GR</div>
                   </div>
-                </article>
-
-                <!-- MO -->
-                <article class="p-5 glass rounded-2xl enter-up" style="animation-delay:.95s">
-                  <div class="flex items-start gap-4">
-                    <div class="flex-shrink-0">
-                      <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 flex items-center justify-center font-bold text-black">MO</div>
-                    </div>
-                    <div>
-                      <h3 class="font-bold text-xl">Modern Era — Psychology, Spirituality & Data Astrology</h3>
-                      <p class="mt-2 text-slate-300">20th-century psychology and modern tech provide precise calculations and AI-assisted synthesis. TL Natal Chart builds on this evolution.</p>
-                    </div>
+                  <div>
+                    <h3 class="font-bold text-xl">Hellenistic Greece — The 12-House & Zodiac Formation (300 BCE)</h3>
+                    <p class="mt-2 text-slate-300">Greek synthesis in Alexandria formalized the 12 signs and houses used in Western natal charts.</p>
                   </div>
-                </article>
+                </div>
+              </article>
 
-              </div>
+              <!-- IN: India / Vedic -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.65s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/vectors/vedic-astrology-chart-astrology-7156522/" alt="Vedic astrology chart" class="object-cover w-full h-full opacity-40">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center font-bold text-black">IN</div>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-xl">India (Vedic / Jyotish) — Karma & Soul Timing</h3>
+                    <p class="mt-2 text-slate-300">Vedic astrology uses the sidereal zodiac and dashas to reveal karma, life chapters, and past-life signatures.</p>
+                  </div>
+                </div>
+              </article>
+
+              <!-- IS: Islamic Golden Age -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.75s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/illustrations/astrology-astronomers-3256954/" alt="Islamic astronomer illustration" class="object-cover w-full h-full opacity-40">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-fuchsia-400 to-pink-500 flex items-center justify-center font-bold text-black">IS</div>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-xl">Islamic Golden Age — Preservation & Refinement</h3>
+                    <p class="mt-2 text-slate-300">Arab and Persian scholars preserved classical knowledge and improved planetary calculations used across continents.</p>
+                  </div>
+                </div>
+              </article>
+
+              <!-- RE: African Resurgence -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.85s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/vectors/space-planets-astrology-astronomy-7226433/" alt="Space planets vector" class="object-cover w-full h-full opacity-35">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-yellow-300 to-lime-400 flex items-center justify-center font-bold text-black">RE</div>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-xl">African Resurgence — Continuity of Destiny Systems</h3>
+                    <p class="mt-2 text-slate-300">African traditions persisted and evolved, maintaining spiritual birth-readings and ancestral cosmologies.</p>
+                  </div>
+                </div>
+              </article>
+
+              <!-- MO: Modern Era -->
+              <article class="p-5 glass rounded-2xl enter-up relative overflow-hidden" style="animation-delay:.95s">
+                <div class="absolute inset-0 z-0">
+                  <img src="https://pixabay.com/vectors/zodiac-astrology-astronomy-5921179/" alt="Modern astrology tech vector" class="object-cover w-full h-full opacity-40">
+                </div>
+                <div class="relative z-10 flex items-start gap-4">
+                  <div class="flex-shrink-0">
+                    <div class="w-14 h-14 rounded-xl bg-gradient-to-br from-indigo-600 to-blue-500 flex items-center justify-center font-bold text-black">MO</div>
+                  </div>
+                  <div>
+                    <h3 class="font-bold text-xl">Modern Era — Psychology, Spirituality & Data Astrology</h3>
+                    <p class="mt-2 text-slate-300">20th-century psychology and modern tech provide precise calculations and AI-assisted synthesis. TL Natal Chart builds on this evolution.</p>
+                  </div>
+                </div>
+              </article>
 
               <!-- Integration block -->
               <div class="mt-4 p-4 rounded-xl glass">
                 <h4 class="font-bold">How TL Natal Chart Integrates These Systems</h4>
                 <ul class="mt-3 ml-4 list-disc text-slate-300 space-y-2">
-                  <li><strong>Source Layering:</strong> African spiritual signals layered under Western house geometry.</li>
-                  <li><strong>Timing Fusion:</strong> Sidereal dashas combined with decan timing for precise life chapters.</li>
-                  <li><strong>Ancestral Signatures:</strong> Lineage markers integrated into interpretation tokens.</li>
-                  <li><strong>Psych-Spiritual Mapping:</strong> Psychological archetypes + karmic lessons for actionable guidance.</li>
+                  <li><strong>Source Layering:</strong> African spiritual signals under Western house geometry.</li>
+                  <li><strong>Timing Fusion:</strong> Sidereal dashas + decan timing for precise life chapters.</li>
+                  <li><strong>Ancestral Signatures:</strong> Lineage markers in interpretation tokens.</li>
+                  <li><strong>Psych-Spiritual Mapping:</strong> Psychological archetypes + karmic lessons for guidance.</li>
                 </ul>
               </div>
 
             </div>
-
           </div>
         </section>
 
-        <!-- Expanded traditions grid -->
+        <!-- Expanded traditions / gallery -->
         <section class="mt-8 glass rounded-3xl p-8">
           <h3 class="font-extrabold text-2xl">African Traditions — Expanded</h3>
           <div class="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -246,90 +260,106 @@
             </div>
           </div>
         </section>
-
       </main>
 
-      <!-- Footer / credits -->
+      <!-- Footer -->
       <footer class="mt-8 text-center text-slate-400">
-        <div class="text-sm">TL Natal Chart — Animated History • Designed for presentation and teaching. Built with Tailwind CSS.</div>
+        <div class="text-sm">TL Natal Chart — Animated History • Built with Tailwind CSS.</div>
+        <div class="text-xs mt-2">Images from Pixabay and Wikimedia Commons (public domain or free license)</div>
       </footer>
-
     </div>
   </div>
 
   <script>
-    // Simple starfield renderer for canvas layers
-    function createStars(canvas, density){
+    // Starfields + orb animation
+    function createStars(canvas, density) {
       const ctx = canvas.getContext('2d');
       const w = canvas.width = canvas.offsetWidth;
       const h = canvas.height = canvas.offsetHeight;
-      ctx.clearRect(0,0,w,h);
-      for(let i=0;i<Math.floor((w*h)/density);i++){
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < (w*h) / density; i++) {
         const x = Math.random()*w;
         const y = Math.random()*h;
         const r = Math.random()*1.2;
-        ctx.fillStyle = 'rgba(255,255,255,' + (Math.random()*0.7+0.15) +')';
-        ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = 'rgba(255,255,255,' + (Math.random()*0.7+0.15) + ')';
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    // Orb canvas animation (subtle rotating orbs)
-    const orb = document.getElementById('orb');
-    const orbCtx = orb.getContext('2d');
-    function resizeOrb(){orb.width=orb.offsetWidth; orb.height=orb.offsetHeight}
-    function drawOrb(t){
-      const w = orb.width; const h = orb.height;
-      orbCtx.clearRect(0,0,w,h);
-      // soft background radial
-      const g = orbCtx.createRadialGradient(w*0.7,h*0.3,10,w*0.5,h*0.5,Math.max(w,h));
-      g.addColorStop(0,'rgba(99,102,241,0.08)'); g.addColorStop(1,'rgba(0,0,0,0)');
-      orbCtx.fillStyle = g; orbCtx.fillRect(0,0,w,h);
-      // rotating halos
-      for(let i=0;i<6;i++){
-        orbCtx.save();
-        orbCtx.globalAlpha = 0.12 + 0.06*Math.sin(t/1000 + i);
-        orbCtx.translate(w/2, h/2);
-        orbCtx.rotate(t/4000 + i*0.9);
-        orbCtx.beginPath(); orbCtx.ellipse(0,0, w*0.28 - i*20, h*0.12 + i*8, 0, 0, Math.PI*2);
-        orbCtx.strokeStyle = i%2? 'rgba(96,165,250,0.07)':'rgba(167,139,250,0.06)'; orbCtx.lineWidth=2; orbCtx.stroke();
-        orbCtx.restore();
-      }
-      requestAnimationFrame(drawOrb);
-    }
-
-    // build starfield inside background layers
-    function attachStarCanvases(){
-      const layers = [ {id:'starLayer1', density:2200}, {id:'starLayer2', density:5000} ];
-      layers.forEach(l=>{
+    function attachStarCanvases() {
+      const layers = [
+        { id: 'starLayer1', density: 2200 },
+        { id: 'starLayer2', density: 5000 },
+      ];
+      layers.forEach(l => {
         const node = document.getElementById(l.id);
         const canvas = document.createElement('canvas');
-        canvas.style.width='100%'; canvas.style.height='100%'; canvas.className='absolute inset-0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.className = 'absolute inset-0';
         node.appendChild(canvas);
-        function render(){
-          canvas.width = node.offsetWidth; canvas.height = node.offsetHeight;
+        const render = () => {
+          canvas.width = node.offsetWidth;
+          canvas.height = node.offsetHeight;
           createStars(canvas, l.density);
-        }
+        };
         window.addEventListener('resize', render);
         render();
       });
     }
 
-    // small interactivity: play/pause toggles animation
-    document.getElementById('playBtn').addEventListener('click', ()=>{ if(!window.orbStarted){ window.orbStarted=true; requestAnimationFrame(drawOrb); } });
-    document.getElementById('pauseBtn').addEventListener('click', ()=>{ window.orbStarted=false; /* simply stop updating by not calling */ });
+    const orb = document.getElementById('orb');
+    const orbCtx = orb.getContext('2d');
+    function resizeOrb() {
+      orb.width = orb.offsetWidth;
+      orb.height = orb.offsetHeight;
+    }
+    function drawOrb(time) {
+      const w = orb.width, h = orb.height;
+      orbCtx.clearRect(0, 0, w, h);
+      const grad = orbCtx.createRadialGradient(w*0.7, h*0.3, 10, w*0.5, h*0.5, Math.max(w, h));
+      grad.addColorStop(0, 'rgba(99,102,241,0.08)');
+      grad.addColorStop(1, 'rgba(0,0,0,0)');
+      orbCtx.fillStyle = grad;
+      orbCtx.fillRect(0, 0, w, h);
 
-    // init
-    resizeOrb(); window.addEventListener('resize', resizeOrb);
+      for (let i = 0; i < 6; i++) {
+        orbCtx.save();
+        orbCtx.globalAlpha = 0.12 + 0.06 * Math.sin(time / 1000 + i);
+        orbCtx.translate(w / 2, h / 2);
+        orbCtx.rotate(time / 4000 + i * 0.9);
+        orbCtx.beginPath();
+        orbCtx.ellipse(0, 0, w * 0.28 - i * 20, h * 0.12 + i * 8, 0, 0, Math.PI * 2);
+        orbCtx.strokeStyle = (i % 2 ? 'rgba(96,165,250,0.07)' : 'rgba(167,139,250,0.06)');
+        orbCtx.lineWidth = 2;
+        orbCtx.stroke();
+        orbCtx.restore();
+      }
+      if (window.orbStarted) requestAnimationFrame(drawOrb);
+    }
+
+    document.getElementById('playBtn').addEventListener('click', () => {
+      if (!window.orbStarted) { window.orbStarted = true; requestAnimationFrame(drawOrb); }
+    });
+    document.getElementById('pauseBtn').addEventListener('click', () => {
+      window.orbStarted = false;
+    });
+
+    window.addEventListener('resize', resizeOrb);
+    resizeOrb();
     attachStarCanvases();
-    // start orb
-    window.orbStarted=true; requestAnimationFrame(drawOrb);
+    window.orbStarted = true;
+    requestAnimationFrame(drawOrb);
 
-    // parallax subtle movement based on mouse
-    document.addEventListener('mousemove', (e)=>{
-      const cx = window.innerWidth/2; const cy = window.innerHeight/2;
-      const dx = (e.clientX - cx)/cx; const dy = (e.clientY - cy)/cy;
-      document.getElementById('starLayer1').style.transform = `translate(${dx*8}px, ${dy*8}px)`;
-      document.getElementById('starLayer2').style.transform = `translate(${dx*4}px, ${dy*4}px)`;
+    document.addEventListener('mousemove', e => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const dx = (e.clientX - cx) / cx;
+      const dy = (e.clientY - cy) / cy;
+      document.getElementById('starLayer1').style.transform = `translate(${dx * 8}px, ${dy * 8}px)`;
+      document.getElementById('starLayer2').style.transform = `translate(${dx * 4}px, ${dy * 4}px)`;
     });
   </script>
 </body>
