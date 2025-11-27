@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.static(path.join(process.cwd(), "public")));
 
-const OPENAI_KEY = process.env.OPENAI_API_KEY;
+const OPENAI_KEY = process.env.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;
 if (!OPENAI_KEY) {
   console.error("Missing OPENAI_API_KEY in environment. Create one at https://platform.openai.com/account/api-keys");
   process.exit(1);
