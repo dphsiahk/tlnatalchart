@@ -1,1 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TL — Destiny Count Calculator</title>
+  <meta name="description" content="Destiny Count (Expression Number) calculator — full breakdown, archetype mapping, practical actions." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { tlGold: '#f6c34d', tlBg: '#071027', tlCard: 'rgba(255,255,255,0.03)' },
+          fontFamily: { display: ['Inter','system-ui','Segoe UI'] }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background: linear-gradient(180deg,#04102a 0%, #071027 100%); }
+    .glass { background: rgba(255,255,255,0.03); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  </style>
+</head>
+<body class="antialiased text-slate-100">
+  <main class="max-w-6xl mx-auto p-6">
+    <header class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <h1 class="text-4xl font-bold text-tlGold">Destiny Count — Advanced Calculator</h1>
+        <p class="mt-2 text-slate-300 max-w-2xl">Calculate your Destiny (Expression) Count from your full birth name and see a full breakdown — archetype, skills, public gifts, karmic notes and practical actions.</p>
+      </div>
+      <div class="text-sm text-slate-300">
+        <div>TL Natal Chart · Module</div>
+        <div class="mt-1">v1.0 • Local Calculation</div>
+      </div>
+    </header>
 
+    <section class="mt-8 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <aside class="glass p-6 rounded-2xl">
+        <h2 class="text-xl font-semibold mb-3">Enter details</h2>
+        <form id="dc-form" class="space-y-4">
+          <div>
+            <label class="text-sm text-slate-300">Full birth name (include middle & family names)</label>
+            <input id="fullName" class="mt-1 w-full rounded-lg p-2 bg-transparent border border-slate-700" placeholder="e.g. HUDSON SIAH KATTIEH" required />
+          </div>
+          <div>
+            <label class="text-sm text-slate-300">Date of birth (for Life Path)</label>
+            <input id="dob" type="date" class="mt-1 w-full rounded-lg p-2 bg-transparent border border-slate-700" />
+          </div>
+          <div class="flex gap-3">
+            <button type="button" id="calc" class="flex-1 py-2 rounded-lg bg-gradient-to-r from-tlGold to-yellow-400 text-tlBg font-semibold">Calculate</button>
+            <button type="button" id="reset" class="px-4 py-2 rounded-lg border border-slate-700">Reset</button>
+          </div>
+        </form>
+
+        <div class="mt-6 text-sm text-slate-300">
+          <strong>What this module calculates:</strong>
+          <ul class="list-disc ml-5 mt-2">
+            <li>Destiny (Expression) Count from full name</li>
+            <li>Soul Number (vowel sum)</li>
+            <li>Life Path (from DOB) — optional</li>
+            <li>Archetype mapping, master number detection, practical actions</li>
+          </ul>
+        </div>
+      </aside>
+
+      <section class="col-span-1 lg:col-span-2 space-y-6">
+        <div id="cardResults" class="glass p-6 rounded-2xl hidden">
+          <div class="flex items-start justify-between">
+            <div>
+              <h3 id="nameOut" class="text-2xl font-semibold text-tlGold"></h3>
+              <div id="dobOut" class="text-sm text-slate-300 mt-1"></div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs text-slate-400">Destiny Summary</div>
+              <div id="destScore" class="text-2xl font-mono mt-1">—</div>
+            </div>
+          </div>
+
+          <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="p-4 rounded-lg">
+              <div class="text-xs text-slate-400">Destiny (Expression)</div>
+              <div id="destinyNumber" class="text-xl font-semibold mt-2">—</div>
+              <div id="destinyArche" class="text-sm text-slate-300 mt-2">—</div>
+            </div>
+            <div class="p-4 rounded-lg">
+              <div class="text-xs text-slate-400">Soul Number (Vowels)</div>
+              <div id="soulNum" class="text-xl font-semibold mt-2">—</div>
+              <div id="soulArche" class="text-sm text-slate-300 mt-2">—</div>
+            </div>
+            <div class="p-4 rounded-lg">
+              <div class="text-xs text-slate-400">Life Path</div>
+              <div id="lifePath" class="text-xl font-semibold mt-2">—</div>
+              <div id="lifeArche" class="text-sm text-slate-300 mt-2">—</div>
+            </div>
+          </div>
+
+          <div class="mt-6 md:flex md:gap-6">
+            <div class="md:flex-1">
+              <canvas id="destRadar" height="240"></canvas>
+            </div>
+            <div class="md:w-96 mt-4 md:mt-0">
+              <h4 class="text-lg font-semibold">Detailed Breakdown</h4>
+              <div id="breakdown" class="mt-3 text-sm text-slate-200 space-y-2"></div>
+            </div>
+          </div>
+
+          <div class="mt-6">
+            <h4 class="text-lg font-semibold">Practical Actions & Guidance</h4>
+            <div id="actionsList" class="mt-3 text-sm text-slate-200 space-y-2"></div>
+          </div>
+        </div>
+
+        <article class="glass p-6 rounded-2xl">
+          <h3 class="text-xl font-semibold">Calculation rules & notes</h3>
+          <ol class="list-decimal ml-5 mt-3 text-slate-300">
+            <li>Letter mapping uses Pythagorean system: A=1, B=2, ... I=9, J=1, K=2, etc.</li>
+            <li>Vowels are treated specially to compute the Soul Number (A E I O U Y).</li>
+            <li>Reduce sums to single digits; master numbers 11,22,33 are preserved when produced directly before reduction.</li>
+            <li>Life Path from DOB: sum all digits of YYYYMMDD and reduce.</li>
+          </ol>
+          <p class="mt-3 text-slate-300">This module is front-end only — ideal for embedding into your TL system and later hooking to backend services for storage, learning models, and ancestral mapping.</p>
+        </article>
+
+        <footer class="text-sm text-slate-400 mt-4">Made for TL Natal Chart — Destiny Count module (one-page UI)</footer>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    // Pythagorean mapping
+    const LETTER_MAP = {A:1,B:2,C:3,D:4,E:5,F:6,G:7,H:8,I:9,J:1,K:2,L:3,M:4,N:5,O:6,P:7,Q:8,R:9,S:1,T:2,U:3,V:4,W:5,X:6,Y:7,Z:8};
+    function sumLetters(name) {
+      name = (name||'').toUpperCase().replace(/[^A-Z]/g,'');
+      let total = 0; for (let ch of name) total += (LETTER_MAP[ch]||0);
+      return total;
+    }
+    function sumVowels(name) {
+      const vowels = (name||'').toUpperCase().replace(/[^AEIOUY]/g,'');
+      let t=0; for (let ch of vowels) t+= (LETTER_MAP[ch]||0);
+      return t;
+    }
+    function reduceNumber(n) {
+      n = Math.abs(Math.floor(Number(n)) || 0);
+      // preserve master numbers 11,22,33
+      while (n>9 && n!==11 && n!==22 && n!==33) {
+        n = String(n).split('').reduce((a,b)=>a+Number(b),0);
+      }
+      return n;
+    }
+    function lifePathFromDOB(dob) {
+      if (!dob) return null;
+      const digits = dob.replace(/-/g,'').split('').map(Number);
+      return reduceNumber(digits.reduce((a,b)=>a+b,0));
+    }
+
+    function archetypeMap(n) {
+      const map = {
+        1: ['Pioneer / Leader','Initiates change, personal authority, entrepreneurship.'],
+        2: ['Mediator / Diplomat','Partnership, sensitivity, cooperative roles.'],
+        3: ['Creator / Communicator','Creative expression, teaching, performance.'],
+        4: ['Builder / Architect','Structure, systems, planning, reliability.'],
+        5: ['Explorer / Freedom-Seeker','Adaptability, travel, sales, variety.'],
+        6: ['Protector / Nurturer','Service, family, counseling, care.'],
+        7: ['Seeker / Mystic','Study, research, introspection, spirituality.'],
+        8: ['Manifestor / Executive','Power, resources, management, wealth.'],
+        9: ['Humanitarian / Sage','Compassion, completion, global service.'],
+        11: ['Illuminator (Master)','Spiritual vision, inspiration, teaching.'],
+        22: ['Master Builder (Master)','Large-scale manifestation, organization.'],
+        33: ['Master Teacher (Master)','Compassionate leadership, healing on scale.']
+      };
+      return map[n] || ['Unknown','No archetype available'];
+    }
+
+    // Chart
+    let radar=null;
+    function drawRadar(values, labels) {
+      const ctx = document.getElementById('destRadar').getContext('2d');
+      if (radar) radar.destroy();
+      radar = new Chart(ctx, {
+        type: 'radar',
+        data: { labels: labels, datasets:[{ label:'Profile', data:values, fill:true, tension:0.4, borderWidth:1 }] },
+        options: { scales:{ r: { suggestedMin:0, suggestedMax:10, ticks:{ stepSize:1 } } }, plugins:{ legend:{ display:false } } }
+      });
+    }
+
+    function actionsFor(destiny, soul, life) {
+      const out = [];
+      // career hints
+      if ([1,8].includes(destiny)) out.push('Career: Aim for leadership roles, entrepreneurship or executive management to express impact.');
+      if ([2,6].includes(destiny)) out.push('Career: Collaboration, counseling, diplomacy, or community projects align well.');
+      if ([3,5].includes(destiny)) out.push('Career: Creative industries, communications, media, travel-oriented roles suit you.');
+      if ([4,7].includes(destiny)) out.push('Career: Technical mastery, research, engineering, or academic roles provide satisfaction.');
+      if (destiny===9) out.push('Career: NGO, humanitarian work, arts for social change, and global advocacy are powerful outlets.');
+
+      // relationships / soul
+      if (soul===2) out.push('Relationship: Practice compassionate listening and partnership-building.');
+      if (soul===6) out.push('Relationship: Embrace caretaking roles while protecting personal boundaries.');
+      if (soul===7) out.push('Relationship: Create sacred alone-time to recharge and process.');
+
+      // life path synergy
+      if (life && [11,22,33].includes(life)) out.push('Life Path Mastery: You may be called to public service or large-scale projects — invest in mentorship and disciplined structures.');
+
+      out.push('Practical: Record 90-day experiments aligned to your Destiny; track emotional resonance and outcome metrics weekly.');
+      return out;
+    }
+
+    document.getElementById('calc').addEventListener('click', ()=>{
+      const name = document.getElementById('fullName').value.trim();
+      const dob = document.getElementById('dob').value;
+      if (!name) return alert('Please enter your full birth name.');
+
+      const totalName = sumLetters(name);
+      const totalVowels = sumVowels(name);
+      const destiny = reduceNumber(totalName);
+      const soul = reduceNumber(totalVowels || 0);
+      const life = lifePathFromDOB(dob);
+
+      // output
+      document.getElementById('cardResults').classList.remove('hidden');
+      document.getElementById('nameOut').textContent = name.toUpperCase();
+      document.getElementById('dobOut').textContent = dob ? `Born ${dob}` : 'DOB not provided';
+      document.getElementById('destScore').textContent = destiny;
+
+      document.getElementById('destinyNumber').textContent = destiny;
+      const destArch = archetypeMap(destiny); document.getElementById('destinyArche').textContent = destArch[0] + ' — ' + destArch[1];
+
+      document.getElementById('soulNum').textContent = soul || '—';
+      const soulArch = archetypeMap(soul||0); document.getElementById('soulArche').textContent = soul ? (soulArch[0] + ' — ' + soulArch[1]) : 'No vowels / soul number unavailable.';
+
+      document.getElementById('lifePath').textContent = life || '—';
+      const lifeArch = life ? archetypeMap(life) : ['—','—']; document.getElementById('lifeArche').textContent = life ? (lifeArch[0] + ' — ' + lifeArch[1]) : 'Provide DOB for Life Path.';
+
+      // breakdown
+      const br = document.getElementById('breakdown'); br.innerHTML='';
+      const rows = [
+        {t:'Name total (raw)', v: totalName},
+        {t:'Vowel total (raw)', v: totalVowels || 0},
+        {t:'Destiny (reduced)', v: destiny},
+        {t:'Soul (reduced)', v: soul || '—'},
+        {t:'Life Path (if DOB)', v: life || '—'}
+      ];
+      rows.forEach(r=>{ const el = document.createElement('div'); el.className='p-3 rounded-md bg-white/3 text-sm'; el.innerHTML=`<strong>${r.t}:</strong> ${r.v}`; br.appendChild(el); });
+
+      // actions
+      const actions = actionsFor(destiny, soul, life);
+      const al = document.getElementById('actionsList'); al.innerHTML=''; actions.forEach(a=>{ const d = document.createElement('div'); d.className='p-3 rounded-md bg-white/4 text-sm'; d.textContent = a; al.appendChild(d); });
+
+      // radar
+      const labels = ['Leadership','Creativity','Service','Structure','Mysticism','Influence'];
+      const vals = [
+        Math.min(10, (destiny===1||destiny===8?8:4)),
+        Math.min(10, (destiny===3?8:4)),
+        Math.min(10, (destiny===6||destiny===9?8:3)),
+        Math.min(10, (destiny===4?9:4)),
+        Math.min(10, (destiny===7||destiny===11?8:3)),
+        Math.min(10, (destiny===8?9:4))
+      ];
+      drawRadar(vals, labels);
+
+    });
+
+    document.getElementById('reset').addEventListener('click', ()=>{
+      document.getElementById('fullName').value=''; document.getElementById('dob').value='';
+      document.getElementById('cardResults').classList.add('hidden'); if (radar) radar.destroy();
+    });
+  </script>
+</body>
+</html>
