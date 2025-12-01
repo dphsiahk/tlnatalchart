@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TL Natal Chart — Intelligence Type Analyzer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+    body { background: #0c0f1c; color: #fff; font-family: 'Inter', sans-serif; }
+    .card { backdrop-filter: blur(14px); background: rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.1) }
+</style>
+</head>
 
+<body class="min-h-screen flex flex-col items-center justify-center px-6">
+
+<header class="text-center mb-10">
+    <h1 class="text-4xl md:text-5xl font-extrabold text-purple-400 drop-shadow-lg">
+        TL Natal Chart – Intelligence Type Decoder
+    </h1>
+    <p class="text-lg text-gray-300 mt-2">Decode the Mind Power Within You</p>
+</header>
+
+<!-- Input Panel -->
+<div class="card w-full max-w-3xl p-8 rounded-2xl shadow-lg">
+    <h2 class="text-2xl font-bold mb-4 text-center text-blue-300">
+        Enter Birth & Name Data to Decode Intelligence Field
+    </h2>
+
+    <form id="tlForm" class="grid md:grid-cols-2 gap-4">
+        <input type="text" id="fullname" placeholder="Full Name"
+        class="p-3 rounded bg-gray-900 border border-gray-700 w-full">
+
+        <input type="date" id="dob" class="p-3 rounded bg-gray-900 border border-gray-700 w-full">
+
+        <input type="number" id="day" placeholder="Birth Day Number" class="p-3 rounded bg-gray-900 border border-gray-700">
+        <input type="number" id="month" placeholder="Birth Month Number" class="p-3 rounded bg-gray-900 border border-gray-700">
+        <input type="number" id="year" placeholder="Birth Year Number" class="p-3 rounded bg-gray-900 border border-gray-700">
+        <input type="number" id="soul" placeholder="Soul Number (If Known)" class="p-3 bg-gray-900 border border-gray-700 rounded">
+    </form>
+
+    <button onclick="decodeIntelligence()"
+    class="w-full mt-6 bg-purple-600 hover:bg-purple-700 py-3 font-bold text-lg rounded-xl">
+        Decode Intelligence Type
+    </button>
+</div>
+
+<!-- Result Panel -->
+<section id="resultBox" class="hidden mt-10 p-8 w-full max-w-3xl card rounded-2xl text-center">
+    <h3 class="text-3xl font-bold text-yellow-300" id="intType"></h3>
+    <p class="mt-4 text-lg text-gray-200 leading-7" id="intDesc"></p>
+</section>
+
+<script>
+// 9 Intelligence Types in TL Natal Mapping
+const intelligenceRef = [
+    { type:"Logical", rule:1, desc:"Analytical thinkers. Strong in reasoning, mathematics, decision logic & truth extraction." },
+    { type:"Verbal", rule:2, desc:"Master of communication. Knowledge flows through words, teaching, speech & writing." },
+    { type:"Social", rule:3, desc:"Connection builders. Deep empathy, leadership & influence among people." },
+    { type:"Existential", rule:4, desc:"Seeker of truth beyond form. Purpose, destiny, meaning & cosmic roles." },
+    { type:"Musical", rule:5, desc:"Vibrational intelligence. Rhythm, harmony, sound frequency & emotional waves." },
+    { type:"Spatial", rule:6, desc:"Design thinkers. Architecture, art, visualization & mapping of reality." },
+    { type:"Nature", rule:7, desc:"Life-energy connectivity with plants, animals & environmental forces." },
+    { type:"Bodily", rule:8, desc:"Movement mastery. Physical endurance, sport, dance & body expression." },
+    { type:"Spiritual", rule:9, desc:"Higher-dimensional awareness. Dreams, intuition, symbolism & divine reception." }
+];
+
+function decodeIntelligence() {
+    const name = document.getElementById('fullname').value.toUpperCase().replace(/[^A-Z]/g,'');
+    if(!name){ alert("Enter Full Name"); return; }
+
+    let total = 0; for (let i of name) total += (i.charCodeAt(0)-64);
+    let reduce = num => num>9 ? reduce(String(num).split('').reduce((a,b)=>a+ +b,0)) : num;
+    
+    const key = reduce(total);
+    const data = intelligenceRef.find(x=>x.rule===key);
+
+    document.getElementById('intType').innerText = data.type + " Intelligence";
+    document.getElementById('intDesc').innerText = data.desc;
+    document.getElementById('resultBox').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
